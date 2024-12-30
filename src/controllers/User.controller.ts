@@ -49,7 +49,7 @@ export default {
   getUserByUserId: async (req: Request, res: Response) => {
     const { id } = req.params;
     try {
-      const user = await User.findOne({ where: { id: id } });
+      const user = await User.findOne({ where: { email: id } });
 
       if (!user) {
         return res.status(404).json({ error: "User not found" });

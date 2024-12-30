@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
-import User from "../models/User.model.ts";
+import User from "@/models/User.model.ts";
 import bcrypt from "bcryptjs";
 
 export default {
   register: async (req: Request, res: Response) => {
-    const { name: userName, email, password } = req.body;
+    const { name, email, password } = req.body;
 
     try {
       const existingUser = await User.findOne({ where: { email: email } });
@@ -18,7 +18,7 @@ export default {
       const hashedPassword = await bcrypt.hash(password, 10);
 
       const user = await User.create({
-        name: userName,
+        name,
         email,
         password: hashedPassword,
       });
@@ -44,7 +44,10 @@ export default {
     try {
       const { email, password } = req.body;
 
-      const user = await User.findOne({ where: { email: email } });
+      const user = await User.findOne({
+        where: { email },
+        attributes: ["id", "name", "email", "password"],
+      });
 
       if (!user) {
         return res.status(404).json({ error: "User not found" });
@@ -55,11 +58,13 @@ export default {
       if (!isPasswordCorrect) {
         return res.status(401).json({ error: "Incorrect password" });
       }
+
       req.session.user = {
         userId: user.id,
-        name: user.name,
-        email: user.email,
+        name: user.name || "",
+        email: user.email || "",
       };
+
       res.status(200).json({ message: "Logged in successfully" });
     } catch (error) {
       console.error("Error logging in:", error);
