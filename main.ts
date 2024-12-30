@@ -1,4 +1,4 @@
-import express, {Request, Response} from "express";
+import express, { Request, Response } from "express";
 import UserRoutes from "@/routes/User.route.ts";
 import db from "./db.js";
 const app = express();
@@ -9,7 +9,6 @@ app.get("/", (req: Request, res: Response) => {
 
 app.use("/api/user", UserRoutes);
 
-db.sync({ force: false })
-  .then(() => {
-    app.listen(3000, console.log("Server is running on port: " + 3000));
-  });
+db.sync({ force: false }).then(() => {
+  app.listen(3000, console.log("Server is running on port: " + 3000));
+});

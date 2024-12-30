@@ -1,4 +1,3 @@
-import path from "path";
 import { Sequelize } from "npm:sequelize";
 
 export default new Sequelize({
