@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import User from "@/models/User.model.js";
+import User from "../models/User.model.ts";
 import bcrypt from "bcryptjs";
 
 export default {
