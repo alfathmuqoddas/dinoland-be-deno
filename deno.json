@@ -7,9 +7,7 @@
     "express": "npm:express@^4.21.2",
     "sequelize": "npm:sequelize@^6.37.5",
     "sqlite3": "npm:sqlite3@^5.1.7",
-    "@/models/": "./models/",
-    "@/controllers/": "./controllers/",
-    "@/routes/": "./routes/"
+    "@/": "./src/"
   },
-  "nodeModulesDir": "auto",
+  "nodeModulesDir": "auto"
 }

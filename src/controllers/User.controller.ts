@@ -1,4 +1,4 @@
-import {Request, Response} from "express"
+import { Request, Response } from "express";
 import User from "@/models/User.model.js";
 
 export default {
