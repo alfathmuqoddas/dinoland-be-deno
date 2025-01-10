@@ -22,7 +22,7 @@ type JwtPayload = {
   userId: number;
 };
 
-type DoneFunction = (err: Error | null, user?: object, info?: object) => void;
+type DoneFunction = (error: any, user?: any, info?: any) => void;
 
 passport.use(
   new JwtStrategy(
@@ -48,7 +48,7 @@ passport.use(
 
 app.use(passport.initialize());
 
-app.get("/", (req: Request, res: Response) => {
+app.get("/", (_req: Request, res: Response) => {
   res.json("Hello World");
 });
 
