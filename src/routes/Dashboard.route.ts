@@ -6,7 +6,7 @@ const router = Router();
 router.get(
   "/protected",
   passport.authenticate("jwt", { session: false }),
-  (req: Request, res: Response) => {
+  (_req: Request, res: Response) => {
     res.status(200).json({ message: "Protected route" });
   }
 );

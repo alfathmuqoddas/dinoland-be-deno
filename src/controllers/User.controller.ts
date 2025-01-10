@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import User from "../models/User.model.ts";
 
 export default {
-  seedUser: async (req: Request, res: Response) => {
+  seedUser: async (_req: Request, res: Response) => {
     try {
       const users = [
         {
@@ -35,7 +35,7 @@ export default {
     }
   },
 
-  getAllUser: async (req: Request, res: Response) => {
+  getAllUser: async (_req: Request, res: Response) => {
     try {
       const users = await User.findAll();
 

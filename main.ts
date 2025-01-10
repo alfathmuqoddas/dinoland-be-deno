@@ -22,7 +22,7 @@ type JwtPayload = {
   userId: number;
 };
 
-type DoneFunction = (error: any, user?: any, info?: any) => void;
+type DoneFunction = (err: Error | null, user?: object, info?: object) => void;
 
 passport.use(
   new JwtStrategy(
