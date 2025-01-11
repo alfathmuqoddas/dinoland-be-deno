@@ -24,6 +24,7 @@ export default {
         name,
         email,
         password: hashedPassword,
+        // isLoggedIn: false,
       });
 
       res.status(201).json({ user });
@@ -41,9 +42,20 @@ export default {
         where: { email },
       });
 
-      if (!user || !(await bcrypt.compare(password, user.password))) {
+      if (!user) {
+        return res.status(401).json({ error: "User not found" });
+      }
+
+      if (!(await bcrypt.compare(password, user.password))) {
         return res.status(401).json({ error: "Incorrect password" });
       }
+
+      // if (user.isLoggedIn) {
+      //   return res.status(401).json({ error: "User is already logged in" });
+      // }
+
+      // Update isLoggedIn to true
+      // await User.update({ isLoggedIn: true }, { where: { id: user.id } });
 
       const accessToken = generateAccessToken(user.id);
       const refreshToken = await generateRefreshToken(user.id);

@@ -9,21 +9,25 @@ export default {
           name: "Manny",
           email: "manny@gmail.com",
           password: "password",
+          isLoggedIn: false,
         },
         {
           name: "Juan",
           email: "juan@gmail.com",
           password: "password",
+          isLoggedIn: false,
         },
         {
           name: "Carlos",
           email: "carlos@gmail.com",
           password: "password",
+          isLoggedIn: false,
         },
         {
           name: "Dominique",
           email: "dominique@gmail.com",
           password: "password",
+          isLoggedIn: false,
         },
       ];
       await User.bulkCreate(users);

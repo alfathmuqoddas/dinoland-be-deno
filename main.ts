@@ -54,7 +54,11 @@ app.get("/", (_req: Request, res: Response) => {
 
 app.use("/api/user", UserRoutes);
 app.use("/api/auth", AuthRoutes);
-app.use("/api/dashboard", DashboardRoutes);
+app.use(
+  "/api/dashboard",
+  passport.authenticate("jwt", { session: false }),
+  DashboardRoutes
+);
 
 db.sync({ force: false }).then(() => {
   app.listen(3000, console.log("Server is running on port: " + 3000));

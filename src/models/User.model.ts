@@ -7,6 +7,7 @@ interface UserAttributes {
   name: string;
   email: string;
   password: string;
+  // isLoggedIn: boolean;
 }
 
 // Define optional attributes for creation
@@ -21,6 +22,7 @@ class User
   declare name: string;
   declare email: string;
   declare password: string;
+  // declare isLoggedIn: boolean;
 }
 
 User.init(
@@ -29,6 +31,7 @@ User.init(
     name: { type: DataTypes.STRING, allowNull: false },
     email: { type: DataTypes.STRING, allowNull: false, unique: true },
     password: { type: DataTypes.STRING, allowNull: false },
+    // isLoggedIn: { type: DataTypes.BOOLEAN, allowNull: false },
   },
   { sequelize, modelName: "User" }
 );
