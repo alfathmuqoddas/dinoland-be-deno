@@ -1,4 +1,5 @@
-import express, { Request, Response } from "express";
+// import express, { Request, Response } from "express";
+import { Hono } from "hono";
 // import session from "express-session";
 import UserRoutes from "@/routes/User.route.ts";
 import AuthRoutes from "@/routes/Auth.route.ts";
@@ -9,11 +10,7 @@ import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 import User from "@/models/User.model.ts";
 import db from "./db.js";
 
-const app = express();
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static("public"));
+const app = new Hono();
 
 Deno.env.set("JWT_SECRET", "your_jwt_secret_key");
 Deno.env.set("REFRESH_SECRET", "your_refresh_token_secret");
@@ -48,18 +45,14 @@ passport.use(
 
 app.use(passport.initialize());
 
-app.get("/", (_req: Request, res: Response) => {
-  res.json("Hello World");
+app.get("/", (c) => {
+  return c.json({ message: "Hello World" });
 });
 
-app.use("/api/user", UserRoutes);
-app.use("/api/auth", AuthRoutes);
-app.use(
-  "/api/dashboard",
-  passport.authenticate("jwt", { session: false }),
-  DashboardRoutes
-);
+app.route("/api/user", UserRoutes);
+app.route("/api/auth", AuthRoutes);
+app.route("/api/dashboard", DashboardRoutes);
 
 db.sync({ force: false }).then(() => {
-  app.listen(3000, console.log("Server is running on port: " + 3000));
+  Deno.serve({ port: 3000 }, app.fetch);
 });

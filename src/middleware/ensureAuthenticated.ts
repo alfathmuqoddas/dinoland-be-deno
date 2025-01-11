@@ -1,10 +1,11 @@
-import { Request, Response, Next } from "express";
+// // import { Request, Response, Next } from "express";
+// import { Context } from "hono";
 
-const ensureAuthenticated = (req: Request, res: Response, next: Next) => {
-  if (req.session.user) {
-    return next();
-  }
-  res.status(401).json({ error: "Unauthorized" });
-};
+// const ensureAuthenticated = (c: Context , next: any) => {
+//   if (c.req.session.user) {
+//     return next();
+//   }
+//   res.status(401).json({ error: "Unauthorized" });
+// };
 
-export default ensureAuthenticated;
+// export default ensureAuthenticated;

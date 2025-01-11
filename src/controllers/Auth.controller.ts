@@ -1,4 +1,5 @@
-import { Request, Response } from "express";
+// import { Request, Response } from "express";
+import { Context } from "hono";
 import User from "@/models/User.model.ts";
 import bcrypt from "bcryptjs";
 import { generateAccessToken, generateRefreshToken } from "@/helper/helper.ts";
@@ -6,16 +7,15 @@ import { verify } from "jsonwebtoken";
 import RefreshToken from "@/models/RefreshToken.model.ts";
 
 export default {
-  register: async (req: Request, res: Response) => {
-    const { name, email, password } = req.body;
+  register: async (c: Context) => {
+    const { name, email, password } = await c.req.json();
 
     try {
       const existingUser = await User.findOne({ where: { email: email } });
 
       if (existingUser) {
-        return res
-          .status(409)
-          .json({ error: "email already used for register" });
+        c.status(409);
+        return c.json({ error: "email already used for register" });
       }
 
       const hashedPassword = await bcrypt.hash(password, 10);
@@ -27,27 +27,31 @@ export default {
         // isLoggedIn: false,
       });
 
-      res.status(201).json({ user });
+      c.status(201);
+      c.json({ user });
     } catch (error) {
       console.error("Error registering user:", error);
-      res.status(500).json({ error: "Error registering user" });
+      c.status(500);
+      c.json({ error: "Error registering user" });
     }
   },
 
-  login: async (req: Request, res: Response) => {
+  login: async (c: Context) => {
     try {
-      const { email, password } = req.body;
+      const { email, password } = await c.req.json();
 
       const user = await User.findOne({
         where: { email },
       });
 
       if (!user) {
-        return res.status(401).json({ error: "User not found" });
+        c.status(404);
+        return c.json({ error: "User not found" });
       }
 
       if (!(await bcrypt.compare(password, user.password))) {
-        return res.status(401).json({ error: "Incorrect password" });
+        c.status(401);
+        return c.json({ error: "Incorrect password" });
       }
 
       // if (user.isLoggedIn) {
@@ -60,20 +64,24 @@ export default {
       const accessToken = generateAccessToken(user.id);
       const refreshToken = await generateRefreshToken(user.id);
 
-      res.status(200).json({
+      c.status(200);
+      c.json({
         accessToken,
         refreshToken,
       });
     } catch (err) {
       console.error("Error logging in:", err);
-      res.status(500).json({ error: "Error logging in" });
+      c.status(500);
+      c.json({ error: "Error logging in" });
     }
   },
 
-  refresh: async (req: Request, res: Response) => {
-    const { refreshToken } = req.body;
-    if (!refreshToken)
-      return res.status(401).json({ error: "Refresh token not found" });
+  refresh: async (c: Context) => {
+    const { refreshToken } = await c.req.json();
+    if (!refreshToken) {
+      c.status(401);
+      return c.json({ error: "Refresh token not found" });
+    }
 
     try {
       const decoded = verify(refreshToken, Deno.env.get("REFRESH_SECRET"));
@@ -82,32 +90,39 @@ export default {
       });
 
       if (!storedToken || storedToken.userId !== decoded.userId) {
-        return res
-          .status(403)
-          .json({ error: "Refresh token is invalid or has been expired" });
+        c.status(403);
+        return c.json({
+          error: "Refresh token is invalid or has been expired",
+        });
       }
 
       const accessToken = generateAccessToken(decoded.userId);
-      res.status(200).json({ accessToken });
+      c.status(200);
+      c.json({ accessToken });
     } catch (err) {
       console.error("Error refreshing token:", err);
-      res.status(403).json({
+      c.status(403);
+      c.json({
         error: "Refresh token is invalid or has been expired",
       });
     }
   },
 
-  logout: async (req: Request, res: Response) => {
-    const { refreshToken } = req.body;
-    if (!refreshToken)
-      return res.status(401).json({ error: "Refresh token not found" });
+  logout: async (c: Context) => {
+    const { refreshToken } = await c.req.json();
+    if (!refreshToken) {
+      c.status(401);
+      return c.json({ error: "Refresh token not found" });
+    }
 
     try {
       await RefreshToken.destroy({ where: { token: refreshToken } });
-      res.status(200).json({ message: "Logged out successfully" });
+      c.status(200);
+      c.json({ message: "Logged out successfully" });
     } catch (err) {
       console.error("Error logging out:", err);
-      res.status(500).json({ error: "Error logging out" });
+      c.status(500);
+      c.json({ error: "Error logging out" });
     }
   },
 };

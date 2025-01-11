@@ -1,7 +1,7 @@
 import AuthController from "@/controllers/Auth.controller.ts";
-import { Router } from "express";
+import { Hono } from "hono";
 
-const router = Router();
+const router = new Hono();
 
 router.post("/login", AuthController.login);
 router.post("/register", AuthController.register);

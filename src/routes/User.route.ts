@@ -1,7 +1,8 @@
 import UserController from "@/controllers/User.controller.ts";
-import express from "express";
+// import express from "express";
+import { Hono } from "hono";
 
-const router = express.Router();
+const router = new Hono();
 
 router.get("/seed", UserController.seedUser);
 router.get("/", UserController.getAllUser);
