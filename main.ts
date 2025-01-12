@@ -1,8 +1,12 @@
 import express, { Request, Response } from "express";
 // import session from "express-session";
-import UserRoutes from "@/routes/User.route.ts";
-import AuthRoutes from "@/routes/Auth.route.ts";
-import DashboardRoutes from "@/routes/Dashboard.route.ts";
+import {
+  UserRoutes,
+  AuthRoutes,
+  CartRoutes,
+  DashboardRoutes,
+  ProductRoutes,
+} from "@/routes/index.ts";
 // import ensureAuthenticated from "@/middleware/ensureAuthenticated.ts";
 import passport from "passport";
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
@@ -59,7 +63,12 @@ app.use(
   passport.authenticate("jwt", { session: false }),
   DashboardRoutes
 );
+app.use(
+  "/api/cart",
+  passport.authenticate("jwt", { session: false }),
+  CartRoutes
+);
 
-db.sync({ force: false }).then(() => {
+db.sync({ force: true }).then(() => {
   app.listen(3000, console.log("Server is running on port: " + 3000));
 });

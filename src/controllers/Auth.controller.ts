@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
-import User from "@/models/User.model.ts";
+import { User, RefreshToken } from "@/models/index.ts";
 import bcrypt from "bcryptjs";
 import { generateAccessToken, generateRefreshToken } from "@/helper/helper.ts";
 import { verify } from "jsonwebtoken";
-import RefreshToken from "@/models/RefreshToken.model.ts";
 
 export default {
   register: async (req: Request, res: Response) => {

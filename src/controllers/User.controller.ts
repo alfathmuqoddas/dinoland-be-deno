@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import User from "../models/User.model.ts";
+import { User } from "@/models/index.ts";
 
 export default {
   seedUser: async (_req: Request, res: Response) => {

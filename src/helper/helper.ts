@@ -1,4 +1,4 @@
-import { sign } from "jsonwebtoken";
+import { sign, verify } from "jsonwebtoken";
 import RefreshToken from "@/models/RefreshToken.model.ts";
 
 const generateAccessToken = (userId: number) => {
