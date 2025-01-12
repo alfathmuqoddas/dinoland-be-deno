@@ -10,6 +10,7 @@ export default {
         include: {
           model: Product,
           as: "items",
+          attributes: ["id", "name", "description", "price", "image"],
         },
       });
 
@@ -25,14 +26,37 @@ export default {
   },
   addToCart: async (req: Request, res: Response) => {
     const { productId, quantity } = req.body;
-    // const { cartId } = req.params;
     try {
-      const _cartItem = await Cart.create({
+      // Check if the product is already in the user's cart
+      const existingCartItem = await Cart.findOne({
+        where: {
+          userId: req.user.id,
+          productId: productId, // Same product for this user
+        },
+      });
+
+      if (existingCartItem) {
+        // If you want to update the quantity instead of adding a new item
+        existingCartItem.quantity += quantity; // Adjust as needed
+        await existingCartItem.save();
+
+        return res.status(200).json({
+          message: "Product already in cart, quantity updated",
+          cartItem: existingCartItem,
+        });
+      }
+
+      // If the product is not in the cart, create a new entry
+      const newCartItem = await Cart.create({
         userId: req.user.id,
         productId,
         quantity,
       });
-      res.status(201).json({ message: "Added to cart successfully" });
+
+      res.status(201).json({
+        message: "Product added to cart successfully",
+        cartItem: newCartItem,
+      });
     } catch (err) {
       console.log("Error adding to cart:", err);
       res.status(500).json({ error: "Error adding to cart" });
@@ -41,8 +65,9 @@ export default {
   updateCartItemQuantity: async (req: Request, res: Response) => {
     const { quantity } = req.body;
     const { productId } = req.params;
+    const { id: userId } = req.user;
     try {
-      const cartItem = await Cart.findByPk(productId);
+      const cartItem = await Cart.findOne({ where: { productId, userId } });
       if (cartItem) {
         await cartItem.update({ quantity });
         res.status(200).json({ message: "Cart quantity updated successfully" });
@@ -56,8 +81,9 @@ export default {
   },
   deleteCartItem: async (req: Request, res: Response) => {
     const { productId } = req.params;
+    const { id: userId } = req.user;
     try {
-      const cartItem = await Cart.findByPk(productId);
+      const cartItem = await Cart.findOne({ where: { productId, userId } });
       if (cartItem) {
         await cartItem.destroy();
         res.status(200).json({ message: "Cart item deleted successfully" });
