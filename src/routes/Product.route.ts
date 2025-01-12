@@ -4,8 +4,8 @@ import { Router } from "express";
 
 const router = Router();
 
-router.get("/getAll", ProductController.getAll);
-router.get("/getById/:productId", ProductController.getById);
+router.get("/", ProductController.getAll);
+router.get("/:productId", ProductController.getById);
 router.post(
   "/add",
   passport.authenticate("jwt", { session: false }),

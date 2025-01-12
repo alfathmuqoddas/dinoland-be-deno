@@ -31,17 +31,15 @@ export default {
     }
   },
   add: async (req: Request, res: Response) => {
-    const { name, description, price, image, categoryId } = req.body;
+    const products = req.body;
     try {
-      const product = await Product.bulkCreate([
-        {
-          name,
-          description,
-          price,
-          image,
-          categoryId,
-        },
-      ]);
+      if (!Array.isArray(products) || products.length === 0) {
+        return res
+          .status(400)
+          .json({ error: "Invalid input: Provide an array of products" });
+      }
+
+      const add = await Product.bulkCreate(products);
       res.status(201).json({ message: "Product added successfully" });
     } catch (err) {
       console.log("Error adding product:", err);
