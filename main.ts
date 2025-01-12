@@ -69,6 +69,8 @@ app.use(
   CartRoutes
 );
 
+app.use("/api/product", ProductRoutes);
+
 db.sync({ force: true }).then(() => {
   app.listen(3000, console.log("Server is running on port: " + 3000));
 });

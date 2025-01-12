@@ -33,13 +33,15 @@ export default {
   add: async (req: Request, res: Response) => {
     const { name, description, price, image, categoryId } = req.body;
     try {
-      const product = await Product.create({
-        name,
-        description,
-        price,
-        image,
-        categoryId,
-      });
+      const product = await Product.bulkCreate([
+        {
+          name,
+          description,
+          price,
+          image,
+          categoryId,
+        },
+      ]);
       res.status(201).json({ message: "Product added successfully" });
     } catch (err) {
       console.log("Error adding product:", err);
