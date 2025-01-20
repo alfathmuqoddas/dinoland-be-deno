@@ -18,4 +18,8 @@ const generateRefreshToken = async (userId: number) => {
   return refreshToken;
 };
 
-export { generateAccessToken, generateRefreshToken };
+const decryptToken = (token: string) => {
+  return verify(token, Deno.env.get("JWT_SECRET") as string);
+};
+
+export { generateAccessToken, generateRefreshToken, decryptToken };
