@@ -1,11 +1,21 @@
 import { Request, Response } from "express";
 import { Product } from "@/models/index.ts";
+import { Op } from "sequelize";
 
 export default {
   getAll: async (req: Request, res: Response) => {
-    const { sortBy, sortOrder } = req.query;
+    const { sortBy, sortOrder, categoryId, q } = req.query;
+
     try {
+      const whereClause = {};
+      if (categoryId || q) {
+        whereClause[Op.or] = [
+          categoryId ? { categoryId } : {},
+          q ? { name: { [Op.like]: `%${q}%` } } : {},
+        ];
+      }
       const products = await Product.findAll({
+        where: whereClause,
         order: [[sortBy || "createdAt", sortOrder || "ASC"]],
       });
 
