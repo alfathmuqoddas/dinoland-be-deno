@@ -5,6 +5,7 @@ import { Router } from "express";
 const router = Router();
 
 router.get("/", ProductController.getAll);
+router.get("/sort", ProductController.sortBy);
 router.get("/:productId", ProductController.getById);
 router.post(
   "/add",

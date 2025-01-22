@@ -83,4 +83,21 @@ export default {
       res.status(500).json({ error: "Error deleting product" });
     }
   },
+  sortBy: async (req: Request, res: Response) => {
+    const { sortBy, sortOrder } = req.query;
+    try {
+      const products = await Product.findAll({
+        order: [[sortBy, sortOrder || "ASC"]],
+      });
+
+      if (!products) {
+        return res.status(404).json({ error: "Products not found" });
+      }
+
+      res.status(200).json(products);
+    } catch (err) {
+      console.log("Error fetching data:", err);
+      res.status(500).json({ error: "Error fetching data" });
+    }
+  },
 };
