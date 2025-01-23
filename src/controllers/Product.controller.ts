@@ -7,7 +7,7 @@ export default {
     const { sortBy, sortOrder, categoryId, q } = req.query;
 
     try {
-      const whereClause = {};
+      const whereClause: any = {};
       if (categoryId || q) {
         whereClause[Op.or] = [
           categoryId ? { categoryId } : {},

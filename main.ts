@@ -6,6 +6,7 @@ import {
   CartRoutes,
   DashboardRoutes,
   ProductRoutes,
+  ProductCategoryRoutes,
 } from "@/routes/index.ts";
 // import ensureAuthenticated from "@/middleware/ensureAuthenticated.ts";
 import passport from "passport";
@@ -70,6 +71,7 @@ app.use(
 );
 
 app.use("/api/product", ProductRoutes);
+app.use("/api/productCategory", ProductCategoryRoutes);
 
 db.sync({ force: false }).then(() => {
   app.listen(8080, console.log("Server is running on port: " + 8080));
