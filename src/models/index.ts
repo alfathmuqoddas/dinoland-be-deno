@@ -8,11 +8,13 @@ Cart.belongsTo(Product, { as: "items", foreignKey: "productId" });
 Cart.belongsTo(User, { foreignKey: "userId" });
 
 Product.hasMany(Cart, { as: "items", foreignKey: "productId" });
-Product.hasMany(ProductCategory, {
-  as: "categories",
-  foreignKey: "categoryId",
-});
 
 User.hasMany(Cart, { foreignKey: "userId" });
+
+ProductCategory.hasMany(Product, { as: "products", foreignKey: "categoryId" });
+Product.belongsTo(ProductCategory, {
+  as: "category",
+  foreignKey: "categoryId",
+});
 
 export { Cart, Product, User, RefreshToken, ProductCategory };

@@ -8,6 +8,7 @@ export default {
       if (!categories) {
         return res.status(404).json({ error: "Categories not found" });
       }
+
       res.status(200).json(categories);
     } catch (err) {
       console.log("Error fetching data:", err);

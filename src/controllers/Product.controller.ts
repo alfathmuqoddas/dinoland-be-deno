@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Product } from "@/models/index.ts";
+import { Product, ProductCategory } from "@/models/index.ts";
 import { Op } from "sequelize";
 
 export default {
@@ -17,6 +17,13 @@ export default {
       const products = await Product.findAll({
         where: whereClause,
         order: [[sortBy || "createdAt", sortOrder || "ASC"]],
+        include: [
+          {
+            model: ProductCategory,
+            as: "category",
+            attributes: ["name"],
+          },
+        ],
       });
 
       if (!products) {
