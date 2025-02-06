@@ -41,6 +41,12 @@ export default {
         where: { email },
       });
 
+      if (!email || !password) {
+        return res
+          .status(400)
+          .json({ error: "Email or password not provided" });
+      }
+
       if (!user) {
         return res.status(401).json({ error: "User not found" });
       }
