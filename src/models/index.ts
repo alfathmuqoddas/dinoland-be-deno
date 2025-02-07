@@ -5,6 +5,7 @@ import RefreshToken from "@/models/RefreshToken.model.ts";
 import ProductCategory from "@/models/ProductCategory.model.ts";
 import Order from "@/models/Order.model.ts";
 import OrderItem from "@/models/OrderItem.model.ts";
+import Payment from "@/models/Payment.model.ts";
 
 Cart.belongsTo(Product, { as: "items", foreignKey: "productId" });
 Cart.belongsTo(User, { foreignKey: "userId" });
@@ -19,4 +20,13 @@ Product.belongsTo(ProductCategory, {
   foreignKey: "categoryId",
 });
 
-export { Cart, Product, User, RefreshToken, ProductCategory, Order, OrderItem };
+export {
+  Cart,
+  Product,
+  User,
+  RefreshToken,
+  ProductCategory,
+  Order,
+  OrderItem,
+  Payment,
+};
