@@ -10,6 +10,7 @@ import ShippingAddress from "@/models/ShippingAddress.model";
 import Review from "@/models/Review.model.ts";
 
 Cart.belongsTo(Product, { as: "items", foreignKey: "productId" });
+
 Cart.belongsTo(User, { foreignKey: "userId" });
 
 Product.hasMany(Cart, { as: "items", foreignKey: "productId" });
@@ -21,6 +22,25 @@ Product.belongsTo(ProductCategory, {
   as: "category",
   foreignKey: "categoryId",
 });
+
+//user has many orders
+User.hasMany(Order, { foreignKey: "userId" });
+
+//user has many reviews
+User.hasMany(Review, { foreignKey: "userId" });
+
+//user has many shipping addresses
+User.hasMany(ShippingAddress, { foreignKey: "userId" });
+
+//order has many order items
+Order.hasMany(OrderItem, { foreignKey: "orderId" });
+
+//order one to one payment
+Order.hasOne(Payment, { foreignKey: "paymentId" });
+Payment.belongsTo(Order, { foreignKey: "orderId" });
+
+//product has many reviews
+Product.hasMany(Review, { foreignKey: "productId" });
 
 export {
   Cart,
