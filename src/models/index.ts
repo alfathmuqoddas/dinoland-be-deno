@@ -6,7 +6,8 @@ import ProductCategory from "@/models/ProductCategory.model.ts";
 import Order from "@/models/Order.model.ts";
 import OrderItem from "@/models/OrderItem.model.ts";
 import Payment from "@/models/Payment.model.ts";
-import ShippingAdress from "./ShippingAdress.model";
+import ShippingAddress from "@/models/ShippingAddress.model";
+import Review from "@/models/Review.model.ts";
 
 Cart.belongsTo(Product, { as: "items", foreignKey: "productId" });
 Cart.belongsTo(User, { foreignKey: "userId" });
@@ -30,5 +31,6 @@ export {
   Order,
   OrderItem,
   Payment,
-  ShippingAdress,
+  ShippingAddress,
+  Review,
 };

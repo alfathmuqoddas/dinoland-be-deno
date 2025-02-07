@@ -1,7 +1,7 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import sequelize from "../../db.js";
 
-interface ShippingAdressAttributes {
+interface ShippingAddressAttributes {
   id: number;
   addressName: string;
   userId: number;
@@ -13,12 +13,12 @@ interface ShippingAdressAttributes {
   country: string;
 }
 
-interface ShippingAdressCreationAttributes
-  extends Optional<ShippingAdressAttributes, "id"> {}
+interface ShippingAddressCreationAttributes
+  extends Optional<ShippingAddressAttributes, "id"> {}
 
-class ShippingAdress
-  extends Model<ShippingAdressAttributes, ShippingAdressCreationAttributes>
-  implements ShippingAdressAttributes
+class ShippingAddress
+  extends Model<ShippingAddressAttributes, ShippingAddressCreationAttributes>
+  implements ShippingAddressAttributes
 {
   declare id: number;
   declare addressName: string;
@@ -31,7 +31,7 @@ class ShippingAdress
   declare country: string;
 }
 
-ShippingAdress.init(
+ShippingAddress.init(
   {
     id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
     addressName: { type: DataTypes.STRING, allowNull: false },
@@ -46,4 +46,4 @@ ShippingAdress.init(
   { sequelize, modelName: "ShippingAdress" }
 );
 
-export default ShippingAdress;
+export default ShippingAddress;
