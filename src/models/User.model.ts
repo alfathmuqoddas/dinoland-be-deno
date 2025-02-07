@@ -7,6 +7,7 @@ interface UserAttributes {
   name: string;
   email: string;
   password: string;
+  role: "admin" | "customer";
   // isLoggedIn: boolean;
 }
 
@@ -22,6 +23,7 @@ class User
   declare name: string;
   declare email: string;
   declare password: string;
+  declare role: "admin" | "customer";
   // declare isLoggedIn: boolean;
 }
 
@@ -31,6 +33,7 @@ User.init(
     name: { type: DataTypes.STRING, allowNull: false },
     email: { type: DataTypes.STRING, allowNull: false, unique: true },
     password: { type: DataTypes.STRING, allowNull: false },
+    role: { type: DataTypes.STRING, allowNull: false },
     // isLoggedIn: { type: DataTypes.BOOLEAN, allowNull: false },
   },
   { sequelize, modelName: "User" }
