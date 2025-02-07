@@ -24,23 +24,28 @@ Product.belongsTo(ProductCategory, {
 });
 
 //user has many orders
-User.hasMany(Order, { foreignKey: "userId" });
+User.hasMany(Order, { foreignKey: "userId", onDelete: "CASCADE" });
+Order.belongsTo(User, { foreignKey: "userId" });
 
 //user has many reviews
-User.hasMany(Review, { foreignKey: "userId" });
+User.hasMany(Review, { foreignKey: "userId", onDelete: "CASCADE" });
+Review.belongsTo(User, { foreignKey: "userId" });
 
 //user has many shipping addresses
-User.hasMany(ShippingAddress, { foreignKey: "userId" });
+User.hasMany(ShippingAddress, { foreignKey: "userId", onDelete: "CASCADE" });
+ShippingAddress.belongsTo(User, { foreignKey: "userId" });
 
 //order has many order items
-Order.hasMany(OrderItem, { foreignKey: "orderId" });
+Order.hasMany(OrderItem, { foreignKey: "orderId", onDelete: "CASCADE" });
+OrderItem.belongsTo(Order, { foreignKey: "orderId" });
 
 //order one to one payment
-Order.hasOne(Payment, { foreignKey: "paymentId" });
+Order.hasOne(Payment, { foreignKey: "paymentId", onDelete: "CASCADE" });
 Payment.belongsTo(Order, { foreignKey: "orderId" });
 
 //product has many reviews
-Product.hasMany(Review, { foreignKey: "productId" });
+Product.hasMany(Review, { foreignKey: "productId", onDelete: "CASCADE" });
+Review.belongsTo(Product, { foreignKey: "productId" });
 
 export {
   Cart,
