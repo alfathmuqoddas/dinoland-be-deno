@@ -6,7 +6,7 @@ import ProductCategory from "@/models/ProductCategory.model.ts";
 import Order from "@/models/Order.model.ts";
 import OrderItem from "@/models/OrderItem.model.ts";
 import Payment from "@/models/Payment.model.ts";
-import ShippingAddress from "@/models/ShippingAddress.model";
+import ShippingAddress from "@/models/ShippingAddress.model.ts";
 import Review from "@/models/Review.model.ts";
 
 Cart.belongsTo(Product, { as: "items", foreignKey: "productId" });
@@ -46,6 +46,10 @@ Payment.belongsTo(Order, { foreignKey: "orderId" });
 //product has many reviews
 Product.hasMany(Review, { foreignKey: "productId", onDelete: "CASCADE" });
 Review.belongsTo(Product, { foreignKey: "productId" });
+
+//order item belongs to product
+OrderItem.belongsTo(Product, { foreignKey: "productId", onDelete: "SET NULL" });
+Product.hasMany(OrderItem, { foreignKey: "productId" });
 
 export {
   Cart,
