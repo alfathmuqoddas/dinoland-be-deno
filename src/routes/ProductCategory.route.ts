@@ -1,6 +1,6 @@
 import ProductCategoryController from "@/controllers/ProductCategory.controller.ts";
 import { Router } from "express";
-import ensureIsAdmin from "../middleware/ensureIsAdmin";
+import ensureIsAdmin from "../middleware/ensureIsAdmin.ts";
 import passport from "passport";
 
 const router = Router();

@@ -3,7 +3,7 @@ import express from "express";
 
 const router = express.Router();
 
-router.get("/seed", UserController.seedUser);
+router.post("/seed", UserController.seedUser);
 router.get("/", UserController.getAllUser);
 router.get("/:id", UserController.getUserByUserId);
 

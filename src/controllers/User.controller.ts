@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { User } from "@/models/index.ts";
+import bcrypt from "bcryptjs";
 
 export default {
   seedUser: async (_req: Request, res: Response) => {
@@ -8,28 +9,28 @@ export default {
         {
           name: "Manny",
           email: "manny@gmail.com",
-          password: "password",
+          password: await bcrypt.hash("password", 10),
           role: "admin",
           isLoggedIn: false,
         },
         {
           name: "Juan",
           email: "juan@gmail.com",
-          password: "password",
+          password: await bcrypt.hash("password", 10),
           role: "admin",
           isLoggedIn: false,
         },
         {
           name: "Carlos",
           email: "carlos@gmail.com",
-          password: "password",
+          password: await bcrypt.hash("password", 10),
           role: "customer",
           isLoggedIn: false,
         },
         {
           name: "Dominique",
           email: "dominique@gmail.com",
-          password: "password",
+          password: await bcrypt.hash("password", 10),
           role: "customer",
           isLoggedIn: false,
         },
