@@ -68,7 +68,7 @@ app.use(
 app.use(
   "/api/cart",
   passport.authenticate("jwt", { session: false }),
-  ensureIsCustomer,
+  // ensureIsCustomer,
   CartRoutes
 );
 
