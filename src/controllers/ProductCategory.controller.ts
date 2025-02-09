@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { ProductCategory } from "@/models/index.ts";
+import { categorySeedData } from "@/helper/index.ts";
 
 export default {
   getAll: async (_req: Request, res: Response) => {
@@ -83,57 +84,7 @@ export default {
   },
   seed: async (req: Request, res: Response) => {
     try {
-      const _seed = await ProductCategory.bulkCreate([
-        //seed computer components categories
-        {
-          name: "CPU",
-          description: "Central Processing Unit",
-        },
-        {
-          name: "Motherboard",
-          description: "Motherboard",
-        },
-        {
-          name: "RAM",
-          description: "Random Access Memory",
-        },
-        {
-          name: "Storage",
-          description: "Storage",
-        },
-        {
-          name: "Graphics Card",
-          description: "Graphics Card",
-        },
-        {
-          name: "Power Supply",
-          description: "Power Supply",
-        },
-        {
-          name: "Case",
-          description: "Case",
-        },
-        {
-          name: "Keyboard",
-          description: "Keyboard",
-        },
-        {
-          name: "Mouse",
-          description: "Mouse",
-        },
-        {
-          name: "Monitor",
-          description: "Monitor",
-        },
-        {
-          name: "Headphones",
-          description: "Headphones",
-        },
-        {
-          name: "Cable",
-          description: "Cable",
-        },
-      ]);
+      const _seed = await ProductCategory.bulkCreate(categorySeedData);
 
       res.status(201).json({ message: "Categories seeded successfully" });
     } catch (err) {

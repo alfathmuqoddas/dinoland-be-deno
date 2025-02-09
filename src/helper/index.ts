@@ -1,5 +1,7 @@
 import { sign, verify } from "jsonwebtoken";
 import RefreshToken from "@/models/RefreshToken.model.ts";
+import { productSeedData } from "./productSeedData.ts";
+import { categorySeedData } from "./categorySeedData.ts";
 
 const generateAccessToken = (userId: number, userRole: string) => {
   const accessToken = sign(
@@ -26,4 +28,10 @@ const decryptToken = (token: string) => {
   return verify(token, Deno.env.get("JWT_SECRET") as string);
 };
 
-export { generateAccessToken, generateRefreshToken, decryptToken };
+export {
+  generateAccessToken,
+  generateRefreshToken,
+  decryptToken,
+  categorySeedData,
+  productSeedData,
+};

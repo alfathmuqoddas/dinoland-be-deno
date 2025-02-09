@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { User, RefreshToken } from "@/models/index.ts";
 import bcrypt from "bcryptjs";
-import { generateAccessToken, generateRefreshToken } from "@/helper/helper.ts";
+import { generateAccessToken, generateRefreshToken } from "@/helper/index.ts";
 import { verify } from "jsonwebtoken";
 
 export default {
