@@ -1,4 +1,4 @@
-import { Sequelize } from "npm:sequelize";
+import { Sequelize } from "sequelize";
 
 export default new Sequelize({
   dialect: "sqlite",

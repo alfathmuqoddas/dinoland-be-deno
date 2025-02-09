@@ -8,6 +8,7 @@ import {
   ProductRoutes,
   ProductCategoryRoutes,
   ShippingAddressRoutes,
+  OrderRoutes,
 } from "@/routes/index.ts";
 // import ensureAuthenticated from "@/middleware/ensureAuthenticated.ts";
 import passport from "passport";
@@ -80,6 +81,12 @@ app.use(
   "/api/shippingAddress",
   passport.authenticate("jwt", { session: false }),
   ShippingAddressRoutes
+);
+
+app.use(
+  "/api/order",
+  passport.authenticate("jwt", { session: false }),
+  OrderRoutes
 );
 
 db.sync({ force: false }).then(() => {

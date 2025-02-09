@@ -5,6 +5,7 @@ import DashboardRoutes from "@/routes/Dashboard.route.ts";
 import ProductRoutes from "@/routes/Product.route.ts";
 import ProductCategoryRoutes from "@/routes/ProductCategory.route.ts";
 import ShippingAddressRoutes from "@/routes/ShippingAddress.route.ts";
+import OrderRoutes from "@/routes/Order.route.ts";
 
 export {
   UserRoutes,
@@ -14,4 +15,5 @@ export {
   ProductRoutes,
   ProductCategoryRoutes,
   ShippingAddressRoutes,
+  OrderRoutes,
 };
