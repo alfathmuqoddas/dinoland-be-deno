@@ -1,4 +1,4 @@
-import ShippingAddressController from "../controllers/ShippingAddress.controller";
+import ShippingAddressController from "../controllers/ShippingAddress.controller.ts";
 import { Router } from "express";
 
 const router = Router();
