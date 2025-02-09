@@ -60,11 +60,36 @@ export default {
           .json({ error: "Invalid input: Provide an array of products" });
       }
 
-      const add = await Product.bulkCreate(products);
-      res.status(201).json({ message: "Product added successfully" });
+      // Check if all products have a valid categoryId and if the category exists
+      for (const product of products) {
+        if (!product.categoryId) {
+          return res
+            .status(400)
+            .json({
+              error: "Invalid input: Each product must have a categoryId",
+            });
+        }
+
+        const category = await ProductCategory.findByPk(product.categoryId);
+        if (!category) {
+          return res
+            .status(404)
+            .json({
+              error: `Category with ID ${product.categoryId} not found`,
+            });
+        }
+      }
+
+      const addedProducts = await Product.bulkCreate(products); // Store the result
+      res
+        .status(201)
+        .json({
+          message: "Products added successfully",
+          products: addedProducts,
+        }); // Include added products
     } catch (err) {
-      console.log("Error adding product:", err);
-      res.status(500).json({ error: "Error adding product" });
+      console.error("Error adding products:", err); // Use console.error for errors
+      res.status(500).json({ error: "Error adding products" }); // More descriptive error message
     }
   },
   update: async (req: Request, res: Response) => {
@@ -104,10 +129,9 @@ export default {
       res.status(500).json({ error: "Error deleting product" });
     }
   },
-  seed: async (req: Request, res: Response) => {
+  seed: async (_req: Request, res: Response) => {
     try {
       const _seed = await Product.bulkCreate(productSeedData);
-
       res.status(201).json({ message: "Products seeded successfully" });
     } catch (err) {
       console.log("Error seeding products:", err);
