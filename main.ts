@@ -12,6 +12,7 @@ import {
 import passport from "passport";
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 import User from "@/models/User.model.ts";
+import ensureIsCustomer from "./src/middleware/ensureIsCustomer.ts";
 import db from "./db.js";
 
 const app = express();
@@ -67,6 +68,7 @@ app.use(
 app.use(
   "/api/cart",
   passport.authenticate("jwt", { session: false }),
+  ensureIsCustomer,
   CartRoutes
 );
 

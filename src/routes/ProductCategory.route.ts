@@ -10,16 +10,19 @@ router.get("/:categoryId", ProductCategoryController.getById);
 router.post(
   "/add",
   passport.authenticate("jwt", { session: false }),
+  ensureIsAdmin,
   ProductCategoryController.add
 );
 router.post(
   "/update/:categoryId",
   passport.authenticate("jwt", { session: false }),
+  ensureIsAdmin,
   ProductCategoryController.update
 );
 router.post(
   "/delete/:categoryId",
   passport.authenticate("jwt", { session: false }),
+  ensureIsAdmin,
   ProductCategoryController.delete
 );
 router.post(
