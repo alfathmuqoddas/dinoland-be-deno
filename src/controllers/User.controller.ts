@@ -9,24 +9,28 @@ export default {
           name: "Manny",
           email: "manny@gmail.com",
           password: "password",
+          role: "admin",
           isLoggedIn: false,
         },
         {
           name: "Juan",
           email: "juan@gmail.com",
           password: "password",
+          role: "admin",
           isLoggedIn: false,
         },
         {
           name: "Carlos",
           email: "carlos@gmail.com",
           password: "password",
+          role: "customer",
           isLoggedIn: false,
         },
         {
           name: "Dominique",
           email: "dominique@gmail.com",
           password: "password",
+          role: "customer",
           isLoggedIn: false,
         },
       ];

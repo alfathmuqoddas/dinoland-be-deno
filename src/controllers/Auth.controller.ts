@@ -62,8 +62,8 @@ export default {
       // Update isLoggedIn to true
       // await User.update({ isLoggedIn: true }, { where: { id: user.id } });
 
-      const accessToken = await generateAccessToken(user.id);
-      const refreshToken = await generateRefreshToken(user.id);
+      const accessToken = await generateAccessToken(user.id, user.role);
+      const refreshToken = await generateRefreshToken(user.id, user.role);
 
       res.status(200).json({
         accessToken,

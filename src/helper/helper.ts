@@ -1,16 +1,20 @@
 import { sign, verify } from "jsonwebtoken";
 import RefreshToken from "@/models/RefreshToken.model.ts";
 
-const generateAccessToken = (userId: number) => {
-  const accessToken = sign({ userId }, Deno.env.get("JWT_SECRET") as string, {
-    expiresIn: "15m",
-  });
+const generateAccessToken = (userId: number, userRole: string) => {
+  const accessToken = sign(
+    { userId, userRole },
+    Deno.env.get("JWT_SECRET") as string,
+    {
+      expiresIn: "15m",
+    }
+  );
   return accessToken;
 };
 
-const generateRefreshToken = async (userId: number) => {
+const generateRefreshToken = async (userId: number, userRole: string) => {
   const refreshToken = sign(
-    { userId },
+    { userId, userRole },
     Deno.env.get("REFRESH_SECRET") as string,
     { expiresIn: "7d" }
   );
