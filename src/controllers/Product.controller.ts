@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { Product, ProductCategory } from "@/models/index.ts";
 import { Op } from "sequelize";
+import { productSeedData } from "@/helper/index.ts";
 
 export default {
   getAll: async (req: Request, res: Response) => {
@@ -101,6 +102,16 @@ export default {
     } catch (err) {
       console.log("Error deleting product:", err);
       res.status(500).json({ error: "Error deleting product" });
+    }
+  },
+  seed: async (req: Request, res: Response) => {
+    try {
+      const _seed = await Product.bulkCreate(productSeedData);
+
+      res.status(201).json({ message: "Products seeded successfully" });
+    } catch (err) {
+      console.log("Error seeding products:", err);
+      res.status(500).json({ error: "Error seeding products " + err });
     }
   },
 };
