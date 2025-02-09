@@ -4,6 +4,7 @@ import CartRoutes from "@/routes/Cart.route.ts";
 import DashboardRoutes from "@/routes/Dashboard.route.ts";
 import ProductRoutes from "@/routes/Product.route.ts";
 import ProductCategoryRoutes from "@/routes/ProductCategory.route.ts";
+import ShippingAddressRoutes from "@/routes/ShippingAddress.route.ts";
 
 export {
   UserRoutes,
@@ -12,4 +13,5 @@ export {
   DashboardRoutes,
   ProductRoutes,
   ProductCategoryRoutes,
+  ShippingAddressRoutes,
 };
