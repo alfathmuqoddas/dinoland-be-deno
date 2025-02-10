@@ -12,7 +12,10 @@ export default {
         include: [
           {
             model: OrderItem,
-            include: [Product],
+            include: {
+              model: Product,
+              attributes: ["id", "name", "description", "price", "image"],
+            },
           },
         ],
       });
@@ -35,7 +38,10 @@ export default {
         include: [
           {
             model: OrderItem,
-            include: [Product],
+            include: {
+              model: Product,
+              attributes: ["id", "name", "description", "price", "image"],
+            },
           },
         ],
       });
@@ -52,12 +58,16 @@ export default {
     const transaction = await sequelize.transaction();
     try {
       const { id: userId } = req.user;
-      const { shippingAddressId, paymentMethod } = req.body;
+      //   const { shippingAddressId, paymentMethod } = req.body;
 
       //fetch cart items
       const cartItems = await Cart.findAll({
         where: { userId },
-        include: [Product],
+        include: {
+          model: Product,
+          as: "items",
+          attributes: ["id", "name", "description", "price", "image"],
+        },
       });
       if (cartItems.length === 0) {
         return res.status(400).json({ error: "Cart is empty" });
