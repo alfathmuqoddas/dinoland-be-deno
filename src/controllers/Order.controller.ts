@@ -1,13 +1,20 @@
 import { Request, Response } from "express";
 import { Order, OrderItem, Product, Cart } from "@/models/index.ts";
 import sequelize from "../../db.js";
+import { where } from "sequelize";
 
 export default {
   getOrder: async (req: Request, res: Response) => {
-    const { id: userId } = req.user;
+    const { id: userId, role } = req.user;
     const { status, sortBy, sortOrder } = req.query;
 
-    const whereCondition: any = { userId };
+    const whereCondition: any = {};
+    //if the req.user.role is admin, then return all orders
+    if (role !== "admin") {
+      whereCondition.userId = userId;
+    }
+
+    //if it has status query param, then filter orders by status
     if (status) whereCondition.status = status;
 
     try {
