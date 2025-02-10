@@ -5,10 +5,15 @@ import sequelize from "../../db.js";
 export default {
   getOrder: async (req: Request, res: Response) => {
     const { id: userId } = req.user;
+    const { status, sortBy, sortOrder } = req.query;
+
+    const whereCondition: any = { userId };
+    if (status) whereCondition.status = status;
 
     try {
       const orders = await Order.findAll({
-        where: { userId },
+        where: whereCondition,
+        order: [[sortBy || "createdAt", sortOrder || "ASC"]],
         include: [
           {
             model: OrderItem,
@@ -105,6 +110,23 @@ export default {
       console.log("Error adding order:", err);
       await transaction.rollback();
       res.status(500).json({ error: "Error adding order " + err });
+    }
+  },
+  updateOrder: async (req: Request, res: Response) => {
+    // const {id: userId} = req.user;
+    const { id } = req.params;
+    const { status } = req.body;
+    try {
+      const order = await Order.findOne({ where: { id } });
+      if (order) {
+        await order.update({ status });
+        res.status(200).json({ message: "Order updated successfully" });
+      } else {
+        res.status(404).json({ error: "Order not found" });
+      }
+    } catch (err) {
+      console.log("Error updating order:", err);
+      res.status(500).json({ error: "Error updating order" });
     }
   },
 };
