@@ -7,6 +7,7 @@ const router = Router();
 
 router.get("/", ProductController.getAll);
 router.get("/:productId", ProductController.getById);
+router.get("/bulkSearch", ProductController.getByProductIds);
 router.post(
   "/add",
   passport.authenticate("jwt", { session: false }),

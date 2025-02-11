@@ -51,6 +51,29 @@ export default {
       res.status(500).json({ error: "Error fetching individual product data" });
     }
   },
+  getByProductIds: async (req: Request, res: Response) => {
+    const productIds = req.body.productIds;
+
+    try {
+      if (!Array.isArray(productIds) || productIds.length === 0) {
+        return res
+          .status(400)
+          .json({ error: "productIds must be a non-empty array" });
+      }
+      const products = await Product.findAll({
+        where: {
+          id: { [Op.in]: productIds },
+        },
+      });
+      if (!products) {
+        return res.status(404).json({ error: "Products not found" });
+      }
+      return res.status(200).json(products);
+    } catch (err) {
+      console.log("Error fetching data:", err);
+      res.status(500).json({ error: "Error fetching data" });
+    }
+  },
   add: async (req: Request, res: Response) => {
     const products = req.body;
     try {
@@ -63,30 +86,24 @@ export default {
       // Check if all products have a valid categoryId and if the category exists
       for (const product of products) {
         if (!product.categoryId) {
-          return res
-            .status(400)
-            .json({
-              error: "Invalid input: Each product must have a categoryId",
-            });
+          return res.status(400).json({
+            error: "Invalid input: Each product must have a categoryId",
+          });
         }
 
         const category = await ProductCategory.findByPk(product.categoryId);
         if (!category) {
-          return res
-            .status(404)
-            .json({
-              error: `Category with ID ${product.categoryId} not found`,
-            });
+          return res.status(404).json({
+            error: `Category with ID ${product.categoryId} not found`,
+          });
         }
       }
 
       const addedProducts = await Product.bulkCreate(products); // Store the result
-      res
-        .status(201)
-        .json({
-          message: "Products added successfully",
-          products: addedProducts,
-        }); // Include added products
+      res.status(201).json({
+        message: "Products added successfully",
+        products: addedProducts,
+      }); // Include added products
     } catch (err) {
       console.error("Error adding products:", err); // Use console.error for errors
       res.status(500).json({ error: "Error adding products" }); // More descriptive error message
