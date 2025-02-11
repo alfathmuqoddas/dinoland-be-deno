@@ -52,7 +52,7 @@ export default {
     }
   },
   getByProductIds: async (req: Request, res: Response) => {
-    const productIds = req.body.productIds;
+    const { productIds } = req.body;
 
     try {
       if (!Array.isArray(productIds) || productIds.length === 0) {
