@@ -44,7 +44,9 @@ passport.use(
         if (user) {
           return done(null, user);
         } else {
-          return done(null, false);
+          return done(null, false, {
+            message: "User not found or unauthorized",
+          });
         }
       } catch (err) {
         console.log(err);
