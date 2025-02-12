@@ -62,7 +62,7 @@ export default {
       }
       const products = await Product.findAll({
         where: {
-          id: { [Op.in]: productIds },
+          id: productIds,
         },
       });
       if (!products) {
