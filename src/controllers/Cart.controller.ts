@@ -18,10 +18,20 @@ export default {
         return res.status(404).json({ error: "Cart not found" });
       }
 
-      res.status(200).json(cartItem);
+      const totalPrice = cartItem.reduce(
+        (acc: number, item: any) => acc + item.items.price * item.quantity,
+        0
+      );
+
+      const totalQuantity = cartItem.reduce(
+        (acc: number, item: any) => acc + item.quantity,
+        0
+      );
+
+      res.status(200).json({ totalPrice, totalQuantity, cartItem });
     } catch (err) {
       console.log("Error fetching cart:", err);
-      res.status(500).json({ error: "Error fetching cart" });
+      res.status(500).json({ error: "Error fetching cart " + err });
     }
   },
   addToCart: async (req: Request, res: Response) => {
