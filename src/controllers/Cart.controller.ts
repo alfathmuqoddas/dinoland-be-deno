@@ -89,6 +89,43 @@ export default {
       res.status(500).json({ error: "Error updating cart quantity" });
     }
   },
+  incrementCartItemQuantity: async (req: Request, res: Response) => {
+    const { productId } = req.params;
+    const { id: userId } = req.user;
+    try {
+      const cartItem = await Cart.findOne({ where: { productId, userId } });
+      if (cartItem) {
+        await cartItem.increment("quantity", { by: 1 });
+        res.status(200).json({ message: "Cart quantity updated successfully" });
+      } else {
+        res.status(404).json({ message: "Cart item not found" });
+      }
+    } catch (err) {
+      console.log("Error updating cart quantity:", err);
+      res.status(500).json({ message: "Error updating cart quantity" });
+    }
+  },
+  decrementCartItemQuantity: async (req: Request, res: Response) => {
+    const { productId } = req.params;
+    const { id: userId } = req.user;
+    try {
+      const cartItem = await Cart.findOne({ where: { productId, userId } });
+      if (!cartItem) {
+        res.status(404).json({ message: "Cart item not found" });
+      }
+      if (cartItem.quantity <= 1) {
+        res
+          .status(400)
+          .json({ message: "Cart item quantity cannot be less than 1" });
+      }
+
+      await cartItem.decrement("quantity", { by: 1 });
+      res.status(200).json({ message: "Cart quantity updated successfully" });
+    } catch (err) {
+      console.log("Error updating cart quantity:", err);
+      res.status(500).json({ message: "Error updating cart quantity " + err });
+    }
+  },
   deleteCartItem: async (req: Request, res: Response) => {
     const { productId } = req.params;
     const { id: userId } = req.user;
