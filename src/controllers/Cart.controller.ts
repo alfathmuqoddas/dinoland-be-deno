@@ -110,15 +110,19 @@ export default {
     const { id: userId } = req.user;
     try {
       const cartItem = await Cart.findOne({ where: { productId, userId } });
+      // If the cart item doesn't exist, return a 404 error.
       if (!cartItem) {
-        res.status(404).json({ message: "Cart item not found" });
+        return res.status(404).json({ message: "Cart item not found" });
       }
+
+      // Prevent the quantity from going below 1.
       if (cartItem.quantity <= 1) {
-        res
+        return res
           .status(400)
           .json({ message: "Cart item quantity cannot be less than 1" });
       }
 
+      // Decrement the quantity by 1.
       await cartItem.decrement("quantity", { by: 1 });
       res.status(200).json({ message: "Cart quantity updated successfully" });
     } catch (err) {
