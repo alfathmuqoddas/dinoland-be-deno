@@ -93,7 +93,7 @@ export default {
       }
 
       const accessToken = generateAccessToken(decoded.userId);
-      res.status(200).json({ accessToken });
+      res.status(200).json({ newAccessToken: accessToken });
     } catch (err) {
       console.error("Error refreshing token:", err);
       res.status(403).json({

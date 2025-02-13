@@ -69,7 +69,7 @@ export default {
       });
     } catch (err) {
       console.log("Error adding to cart:", err);
-      res.status(500).json({ error: "Error adding to cart" });
+      res.status(500).json({ message: "Error adding to cart " + err });
     }
   },
   updateCartItemQuantity: async (req: Request, res: Response) => {
