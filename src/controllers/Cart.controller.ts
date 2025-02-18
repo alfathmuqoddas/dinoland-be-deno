@@ -31,7 +31,7 @@ export default {
       res.status(200).json({ totalPrice, totalQuantity, cartItem });
     } catch (err) {
       console.log("Error fetching cart:", err);
-      res.status(500).json({ error: "Error fetching cart " + err });
+      res.status(500).json({ message: "Error fetching cart " + err });
     }
   },
   addToCart: async (req: Request, res: Response) => {
@@ -82,11 +82,11 @@ export default {
         await cartItem.update({ quantity });
         res.status(200).json({ message: "Cart quantity updated successfully" });
       } else {
-        res.status(404).json({ error: "Cart item not found" });
+        res.status(404).json({ message: "Cart item not found" });
       }
     } catch (err) {
       console.log("Error updating cart quantity:", err);
-      res.status(500).json({ error: "Error updating cart quantity" });
+      res.status(500).json({ message: "Error updating cart quantity" });
     }
   },
   incrementCartItemQuantity: async (req: Request, res: Response) => {
@@ -139,11 +139,11 @@ export default {
         await cartItem.destroy();
         res.status(200).json({ message: "Cart item deleted successfully" });
       } else {
-        res.status(404).json({ error: "Cart item not found" });
+        res.status(404).json({ message: "Cart item not found" });
       }
     } catch (err) {
       console.log("Error deleting cart item:", err);
-      res.status(500).json({ error: "Error deleting cart item" });
+      res.status(500).json({ message: "Error deleting cart item" });
     }
   },
 };
