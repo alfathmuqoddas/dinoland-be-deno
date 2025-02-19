@@ -8,6 +8,6 @@ router.post("/", CartController.addToCart);
 router.post("/update/:productId", CartController.updateCartItemQuantity);
 router.post("/increment/:productId", CartController.incrementCartItemQuantity);
 router.post("/decrement/:productId", CartController.decrementCartItemQuantity);
-router.post("/delete/:productId", CartController.deleteCartItem);
+router.delete("/delete/:productId", CartController.deleteCartItem);
 
 export default router;

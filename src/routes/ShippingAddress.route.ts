@@ -6,7 +6,7 @@ const router = Router();
 router.get("/", ShippingAddressController.getShippingAddress);
 router.get("/:id", ShippingAddressController.getShippingAddressById);
 router.post("/", ShippingAddressController.addShippingAddress);
-router.post("/update/:id", ShippingAddressController.updateShippingAddress);
-router.post("/delete/:id", ShippingAddressController.deleteShippingAddress);
+router.put("/update/:id", ShippingAddressController.updateShippingAddress);
+router.delete("/delete/:id", ShippingAddressController.deleteShippingAddress);
 
 export default router;

@@ -13,13 +13,13 @@ router.post(
   ensureIsAdmin,
   ProductCategoryController.add
 );
-router.post(
+router.put(
   "/update/:categoryId",
   passport.authenticate("jwt", { session: false }),
   ensureIsAdmin,
   ProductCategoryController.update
 );
-router.post(
+router.delete(
   "/delete/:categoryId",
   passport.authenticate("jwt", { session: false }),
   ensureIsAdmin,
