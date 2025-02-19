@@ -116,10 +116,11 @@ export default {
       }
 
       // Prevent the quantity from going below 1.
-      if (cartItem.quantity <= 1) {
+      if (cartItem.quantity < 2) {
+        await cartItem.destroy();
         return res
           .status(400)
-          .json({ message: "Cart item quantity cannot be less than 1" });
+          .json({ message: "Cart item successfully deleted" });
       }
 
       // Decrement the quantity by 1.
