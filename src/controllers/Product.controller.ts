@@ -6,6 +6,9 @@ import { productSeedData } from "@/helper/index.ts";
 export default {
   getAll: async (req: Request, res: Response) => {
     const { sortBy, sortOrder, categoryId, q } = req.query;
+    const page = parseInt(req.query.page as string) || 1;
+    const pageSize = parseInt(req.query.pageSize as string) || 6;
+    const offset = (page - 1) * pageSize;
 
     try {
       const whereClause: any = {};
@@ -15,9 +18,11 @@ export default {
           q ? { name: { [Op.like]: `%${q}%` } } : {},
         ];
       }
-      const products = await Product.findAll({
+      const { count, rows: products } = await Product.findAndCountAll({
         where: whereClause,
         order: [[sortBy || "createdAt", sortOrder || "ASC"]],
+        limit: pageSize,
+        offset,
         include: [
           {
             model: ProductCategory,
@@ -31,7 +36,12 @@ export default {
         return res.status(404).json({ error: "Products not found" });
       }
 
-      res.status(200).json(products);
+      res.status(200).json({
+        products,
+        totalRecords: count,
+        totalPages: Math.ceil(count / pageSize),
+        currentPage: page,
+      });
     } catch (err) {
       console.log("Error fetching data:", err);
       res.status(500).json({ error: "Error fetching data" });
