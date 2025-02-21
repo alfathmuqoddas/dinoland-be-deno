@@ -115,4 +115,13 @@ export default {
       res.status(500).json({ error: "Error logging out" });
     }
   },
+  isAdmin: async (req: Request, res: Response) => {
+    try {
+      if (!req.user) return res.status(401).json({ error: "User not found" });
+      res.status(200).json({ isAdmin: req.user.role === "admin" });
+    } catch (err) {
+      console.error("Error checking if user is admin:", err);
+      res.status(500).json({ error: "Error checking if user is admin" });
+    }
+  },
 };
