@@ -48,7 +48,7 @@ Product.hasMany(Review, { foreignKey: "productId", onDelete: "CASCADE" });
 Review.belongsTo(Product, { foreignKey: "productId" });
 
 //order item belongs to product
-OrderItem.belongsTo(Product, { foreignKey: "productId", onDelete: "SET NULL" });
+OrderItem.belongsTo(Product, { foreignKey: "productId", onDelete: "CASCADE" });
 Product.hasMany(OrderItem, { foreignKey: "productId" });
 
 export {

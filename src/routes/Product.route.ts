@@ -20,7 +20,7 @@ router.post(
   ensureIsAdmin,
   ProductController.update
 );
-router.post(
+router.delete(
   "/delete/:productId",
   passport.authenticate("jwt", { session: false }),
   ensureIsAdmin,
