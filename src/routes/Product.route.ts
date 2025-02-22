@@ -14,7 +14,7 @@ router.post(
   ensureIsAdmin,
   ProductController.add
 );
-router.post(
+router.put(
   "/update/:productId",
   passport.authenticate("jwt", { session: false }),
   ensureIsAdmin,

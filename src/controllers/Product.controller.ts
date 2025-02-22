@@ -84,41 +84,71 @@ export default {
       res.status(500).json({ error: "Error fetching data" });
     }
   },
+
   add: async (req: Request, res: Response) => {
     const products = req.body;
+
+    if (!Array.isArray(products) || products.length === 0) {
+      return res
+        .status(400)
+        .json({ error: "Invalid input: Provide an array of products" });
+    }
+
+    // Validate products
+    const validationErrors: string[] = [];
+    const categoryIds = new Set<number>();
+
+    for (const product of products) {
+      if (!product.name)
+        validationErrors.push("Each product must have a name.");
+      if (!product.description)
+        validationErrors.push("Each product must have a description.");
+      if (product.price == null)
+        validationErrors.push("Each product must have a price.");
+      if (!product.categoryId) {
+        validationErrors.push("Each product must have a categoryId.");
+      } else {
+        categoryIds.add(product.categoryId); // Collect unique category IDs for batch lookup
+      }
+    }
+
+    if (validationErrors.length > 0) {
+      return res.status(400).json({ error: validationErrors });
+    }
+
     try {
-      if (!Array.isArray(products) || products.length === 0) {
-        return res
-          .status(400)
-          .json({ error: "Invalid input: Provide an array of products" });
+      // Check if all category IDs exist in one query (efficient)
+      const existingCategories = await ProductCategory.findAll({
+        where: { id: Array.from(categoryIds) },
+        attributes: ["id"],
+      });
+
+      const existingCategoryIds = new Set(
+        existingCategories.map((cat) => cat.id)
+      );
+      const invalidCategories = Array.from(categoryIds).filter(
+        (id) => !existingCategoryIds.has(id)
+      );
+
+      if (invalidCategories.length > 0) {
+        return res.status(404).json({
+          error: `Categories not found: ${invalidCategories.join(", ")}`,
+        });
       }
 
-      // Check if all products have a valid categoryId and if the category exists
-      for (const product of products) {
-        if (!product.categoryId) {
-          return res.status(400).json({
-            error: "Invalid input: Each product must have a categoryId",
-          });
-        }
+      // Bulk create products
+      const addedProducts = await Product.bulkCreate(products);
 
-        const category = await ProductCategory.findByPk(product.categoryId);
-        if (!category) {
-          return res.status(404).json({
-            error: `Category with ID ${product.categoryId} not found`,
-          });
-        }
-      }
-
-      const addedProducts = await Product.bulkCreate(products); // Store the result
       res.status(201).json({
         message: "Products added successfully",
         products: addedProducts,
-      }); // Include added products
+      });
     } catch (err) {
-      console.error("Error adding products:", err); // Use console.error for errors
-      res.status(500).json({ error: "Error adding products" }); // More descriptive error message
+      console.error("Error adding products:", err);
+      res.status(500).json({ error: "Error adding products" });
     }
   },
+
   update: async (req: Request, res: Response) => {
     const { name, description, price, image, categoryId } = req.body;
     const { productId } = req.params;
