@@ -6,7 +6,6 @@ interface MyBuildAttributes {
   userId: number;
   name: string;
   description: string;
-  totalPrice: number;
 }
 
 interface MyBuildCreationAttributes extends Optional<MyBuildAttributes, "id"> {}
@@ -19,7 +18,6 @@ class MyBuild
   declare userId: number;
   declare name: string;
   declare description: string;
-  declare totalPrice: number;
 }
 
 MyBuild.init(
@@ -28,7 +26,6 @@ MyBuild.init(
     userId: { type: DataTypes.INTEGER, allowNull: false },
     name: { type: DataTypes.STRING, allowNull: false },
     description: { type: DataTypes.STRING },
-    totalPrice: { type: DataTypes.INTEGER, allowNull: false },
   },
   { sequelize, modelName: "MyBuild" }
 );
