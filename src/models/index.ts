@@ -8,6 +8,7 @@ import OrderItem from "@/models/OrderItem.model.ts";
 import Payment from "@/models/Payment.model.ts";
 import ShippingAddress from "@/models/ShippingAddress.model.ts";
 import Review from "@/models/Review.model.ts";
+import MyBuild from "@/models/MyBuild.model.ts";
 
 Cart.belongsTo(Product, { as: "items", foreignKey: "productId" });
 
@@ -51,6 +52,10 @@ Review.belongsTo(Product, { foreignKey: "productId" });
 OrderItem.belongsTo(Product, { foreignKey: "productId", onDelete: "CASCADE" });
 Product.hasMany(OrderItem, { foreignKey: "productId" });
 
+//relation between user and mybuild
+User.hasMany(MyBuild, { foreignKey: "userId", onDelete: "CASCADE" });
+MyBuild.belongsTo(User, { foreignKey: "userId" });
+
 export {
   Cart,
   Product,
@@ -62,4 +67,5 @@ export {
   Payment,
   ShippingAddress,
   Review,
+  MyBuild,
 };

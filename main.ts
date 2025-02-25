@@ -9,12 +9,12 @@ import {
   ProductCategoryRoutes,
   ShippingAddressRoutes,
   OrderRoutes,
+  MyBuildRoutes,
 } from "@/routes/index.ts";
 // import ensureAuthenticated from "@/middleware/ensureAuthenticated.ts";
 import passport from "passport";
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 import User from "@/models/User.model.ts";
-import ensureIsCustomer from "./src/middleware/ensureIsCustomer.ts";
 import db from "./db.js";
 
 const app = express();
@@ -89,6 +89,12 @@ app.use(
   "/api/order",
   passport.authenticate("jwt", { session: false }),
   OrderRoutes
+);
+
+app.use(
+  "/api/my-build",
+  passport.authenticate("jwt", { session: false }),
+  MyBuildRoutes
 );
 
 db.sync({ force: false }).then(() => {
