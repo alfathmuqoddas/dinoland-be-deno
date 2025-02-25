@@ -43,23 +43,31 @@ export default {
   add: async (req: Request, res: Response) => {
     const { buildId } = req.params;
     const { productId } = req.body;
+
     try {
-      //make sure the productId exist in product
+      // Ensure the product exists
       const product = await Product.findByPk(productId);
       if (!product) {
         return res.status(404).json({ error: "Product not found" });
       }
 
-      const _item = await MyBuildItem.create({
-        buildId,
-        productId,
+      // Prevent adding the same product to the build twice
+      const existingBuildItem = await MyBuildItem.findOne({
+        where: { buildId, productId },
       });
-      res.status(201).json({ message: "Build item added successfully" });
-    } catch (err) {
-      console.log("Error adding build item:", err);
-      res.status(500).json({ error: "Error adding build item " + err });
+      if (existingBuildItem) {
+        return res.status(400).json({ error: "Build item already exists" });
+      }
+
+      // Create the new build item
+      await MyBuildItem.create({ buildId, productId });
+      return res.status(201).json({ message: "Build item added successfully" });
+    } catch (error) {
+      console.error("Error adding build item:", error);
+      return res.status(500).json({ error: "Error adding build item" });
     }
   },
+
   delete: async (req: Request, res: Response) => {
     const { buildId } = req.params;
     const { productId } = req.body;
