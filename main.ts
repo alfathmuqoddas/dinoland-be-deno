@@ -10,6 +10,7 @@ import {
   ShippingAddressRoutes,
   OrderRoutes,
   MyBuildRoutes,
+  MyBuildItemRoutes,
 } from "@/routes/index.ts";
 // import ensureAuthenticated from "@/middleware/ensureAuthenticated.ts";
 import passport from "passport";
@@ -95,6 +96,12 @@ app.use(
   "/api/my-build",
   passport.authenticate("jwt", { session: false }),
   MyBuildRoutes
+);
+
+app.use(
+  "/api/my-build-item",
+  passport.authenticate("jwt", { session: false }),
+  MyBuildItemRoutes
 );
 
 db.sync({ force: false }).then(() => {

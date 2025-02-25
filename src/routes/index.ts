@@ -7,6 +7,7 @@ import ProductCategoryRoutes from "@/routes/ProductCategory.route.ts";
 import ShippingAddressRoutes from "@/routes/ShippingAddress.route.ts";
 import OrderRoutes from "@/routes/Order.route.ts";
 import MyBuildRoutes from "@/routes/MyBuild.route.ts";
+import MyBuildItemRoutes from "@/routes/MyBuildItem.route.ts";
 
 export {
   UserRoutes,
@@ -18,4 +19,5 @@ export {
   ShippingAddressRoutes,
   OrderRoutes,
   MyBuildRoutes,
+  MyBuildItemRoutes,
 };

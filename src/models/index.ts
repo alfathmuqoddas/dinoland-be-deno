@@ -9,6 +9,7 @@ import Payment from "@/models/Payment.model.ts";
 import ShippingAddress from "@/models/ShippingAddress.model.ts";
 import Review from "@/models/Review.model.ts";
 import MyBuild from "@/models/MyBuild.model.ts";
+import MyBuildItem from "@/models/MyBuildItem.model.ts";
 
 Cart.belongsTo(Product, { as: "items", foreignKey: "productId" });
 
@@ -25,36 +26,46 @@ Product.belongsTo(ProductCategory, {
 });
 
 //user has many orders
-User.hasMany(Order, { foreignKey: "userId", onDelete: "CASCADE" });
+User.hasMany(Order, { foreignKey: "userId" });
 Order.belongsTo(User, { foreignKey: "userId" });
 
 //user has many reviews
-User.hasMany(Review, { foreignKey: "userId", onDelete: "CASCADE" });
+User.hasMany(Review, { foreignKey: "userId" });
 Review.belongsTo(User, { foreignKey: "userId" });
 
 //user has many shipping addresses
-User.hasMany(ShippingAddress, { foreignKey: "userId", onDelete: "CASCADE" });
+User.hasMany(ShippingAddress, { foreignKey: "userId" });
 ShippingAddress.belongsTo(User, { foreignKey: "userId" });
 
 //order has many order items
-Order.hasMany(OrderItem, { foreignKey: "orderId", onDelete: "CASCADE" });
+Order.hasMany(OrderItem, { foreignKey: "orderId" });
 OrderItem.belongsTo(Order, { foreignKey: "orderId" });
 
 //order one to one payment
-Order.hasOne(Payment, { foreignKey: "paymentId", onDelete: "CASCADE" });
+Order.hasOne(Payment, { foreignKey: "paymentId" });
 Payment.belongsTo(Order, { foreignKey: "orderId" });
 
 //product has many reviews
-Product.hasMany(Review, { foreignKey: "productId", onDelete: "CASCADE" });
+Product.hasMany(Review, { foreignKey: "productId" });
 Review.belongsTo(Product, { foreignKey: "productId" });
 
 //order item belongs to product
-OrderItem.belongsTo(Product, { foreignKey: "productId", onDelete: "CASCADE" });
+OrderItem.belongsTo(Product, { foreignKey: "productId" });
 Product.hasMany(OrderItem, { foreignKey: "productId" });
 
 //relation between user and mybuild
-User.hasMany(MyBuild, { foreignKey: "userId", onDelete: "CASCADE" });
+User.hasMany(MyBuild, { foreignKey: "userId" });
 MyBuild.belongsTo(User, { foreignKey: "userId" });
+
+//relation between mybuild and mybuilditem
+MyBuild.hasMany(MyBuildItem, { foreignKey: "buildId", onDelete: "CASCADE" });
+MyBuildItem.belongsTo(MyBuild, { foreignKey: "buildId", as: "buildItem" });
+
+//relation between mybuilditem and product
+MyBuildItem.belongsTo(Product, {
+  foreignKey: "productId",
+  as: "product",
+});
 
 export {
   Cart,
@@ -68,4 +79,5 @@ export {
   ShippingAddress,
   Review,
   MyBuild,
+  MyBuildItem,
 };
