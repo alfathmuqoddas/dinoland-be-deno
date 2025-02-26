@@ -1,5 +1,10 @@
 import { Request, Response } from "express";
-import { MyBuildItem, Product, ProductCategory } from "@/models/index.ts";
+import {
+  MyBuildItem,
+  Product,
+  ProductCategory,
+  MyBuild,
+} from "@/models/index.ts";
 
 export default {
   getMyBuildItems: async (req: Request, res: Response) => {
@@ -45,6 +50,19 @@ export default {
     const { productId } = req.body;
 
     try {
+      //ensure user has build with buildId and userId
+      const build = await MyBuild.findOne({
+        where: {
+          id: buildId,
+          userId: req.user.id,
+        },
+      });
+
+      if (!build) {
+        return res
+          .status(404)
+          .json({ error: "User does not have access to this build" });
+      }
       // Ensure the product exists
       const product = await Product.findByPk(productId);
       if (!product) {
@@ -72,6 +90,17 @@ export default {
     const { buildId } = req.params;
     const { productId } = req.body;
     try {
+      const build = await MyBuild.findOne({
+        where: {
+          id: buildId,
+          userId: req.user.id,
+        },
+      });
+      if (!build) {
+        return res
+          .status(404)
+          .json({ error: "User does not have access to this build" });
+      }
       const item = await MyBuildItem.findOne({
         where: {
           buildId,
