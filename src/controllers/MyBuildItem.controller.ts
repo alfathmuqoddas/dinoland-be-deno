@@ -10,6 +10,17 @@ export default {
   getMyBuildItems: async (req: Request, res: Response) => {
     const { buildId } = req.params;
     try {
+      const build = await MyBuild.findOne({
+        where: {
+          id: buildId,
+          userId: req.user.id,
+        },
+      });
+      if (!build) {
+        return res
+          .status(403)
+          .json({ error: "User does not have access to this build" });
+      }
       const items = await MyBuildItem.findAll({
         where: {
           buildId,
@@ -60,7 +71,7 @@ export default {
 
       if (!build) {
         return res
-          .status(404)
+          .status(403)
           .json({ error: "User does not have access to this build" });
       }
       // Ensure the product exists
@@ -98,7 +109,7 @@ export default {
       });
       if (!build) {
         return res
-          .status(404)
+          .status(403)
           .json({ error: "User does not have access to this build" });
       }
       const item = await MyBuildItem.findOne({
