@@ -13,13 +13,15 @@ class MyBuildItem extends Model<
 > {
   declare id: CreationOptional<number>;
   declare productId: number;
+  declare categoryId: number;
   declare buildId: number;
 }
 
 MyBuildItem.init(
   {
     id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-    productId: { type: DataTypes.INTEGER, allowNull: true },
+    productId: { type: DataTypes.INTEGER, allowNull: false },
+    categoryId: { type: DataTypes.INTEGER, allowNull: false },
     buildId: { type: DataTypes.INTEGER, allowNull: false },
   },
   { sequelize, modelName: "MyBuildItem" }
