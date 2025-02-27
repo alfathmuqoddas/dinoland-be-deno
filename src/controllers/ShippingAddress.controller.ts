@@ -9,7 +9,7 @@ export default {
         where: { userId },
       });
 
-      if (!shippingAddress) {
+      if (shippingAddress.length === 0) {
         return res.status(404).json({ error: "Shipping address not found" });
       }
       res.status(200).json(shippingAddress);

@@ -21,6 +21,7 @@ export default {
           .status(403)
           .json({ error: "User does not have access to this build" });
       }
+
       const items = await MyBuildItem.findAll({
         where: {
           buildId,
@@ -47,7 +48,7 @@ export default {
           },
         ],
       });
-      if (!items) {
+      if (items.length === 0) {
         return res.status(404).json({ error: "Build items not found" });
       }
       res.status(200).json(items);

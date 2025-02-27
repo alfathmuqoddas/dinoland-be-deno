@@ -75,7 +75,7 @@ export default {
           id: productIds,
         },
       });
-      if (!products) {
+      if (products.length === 0) {
         return res.status(404).json({ error: "Products not found" });
       }
       return res.status(200).json(products);

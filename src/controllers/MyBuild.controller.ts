@@ -11,6 +11,10 @@ export default {
         },
       });
 
+      if (builds.length === 0) {
+        return res.status(404).json({ error: "Builds not found" });
+      }
+
       res.status(200).json(builds);
     } catch (error) {
       res.status(500).json({ message: "Error retrieving builds" });

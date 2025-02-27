@@ -48,6 +48,10 @@ export default {
     try {
       const users = await User.findAll();
 
+      if (users.length === 0) {
+        return res.status(404).json({ error: "Users not found" });
+      }
+
       res.status(200).json(users); // Changed status to 200 for successful retrieval
     } catch (err) {
       console.log("Error fetching data:", err);

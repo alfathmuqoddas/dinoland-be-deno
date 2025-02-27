@@ -6,7 +6,7 @@ export default {
   getAll: async (_req: Request, res: Response) => {
     try {
       const categories = await ProductCategory.findAll();
-      if (!categories) {
+      if (categories.length === 0) {
         return res.status(404).json({ error: "Categories not found" });
       }
 

@@ -14,7 +14,7 @@ export default {
         },
       });
 
-      if (!cartItem) {
+      if (cartItem.length === 0) {
         return res.status(404).json({ error: "Cart not found" });
       }
 
