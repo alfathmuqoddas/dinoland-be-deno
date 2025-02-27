@@ -48,9 +48,6 @@ export default {
           },
         ],
       });
-      if (items.length === 0) {
-        return res.status(404).json({ error: "Build items not found" });
-      }
       res.status(200).json(items);
     } catch (err) {
       console.log("Error fetching data:", err);
