@@ -8,11 +8,14 @@
     "bcryptjs": "npm:bcryptjs@^2.4.3",
     "express": "npm:express@^4.21.2",
     "jsonwebtoken": "npm:jsonwebtoken@^9.0.2",
+    "morgan": "npm:morgan@^1.10.0",
     "passport": "npm:passport@^0.7.0",
     "passport-jwt": "npm:passport-jwt@^4.0.1",
     "sequelize": "npm:sequelize@^6.37.5",
     "@/": "./src/",
-    "sqlite3": "npm:sqlite3@^5.1.7"
+    "sqlite3": "npm:sqlite3@^5.1.7",
+    "winston": "npm:winston@^3.17.0",
+    "winston-daily-rotate-file": "npm:winston-daily-rotate-file@^5.0.0"
   },
   "nodeModulesDir": "auto"
 }
