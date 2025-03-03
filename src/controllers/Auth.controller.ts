@@ -36,10 +36,10 @@ export default {
         role: user.role,
       });
 
-      res.status(201).json({ user });
+      return res.status(201).json({ user });
     } catch (error) {
       logger.error("Error registering user", { error });
-      res.status(500).json({ error: "Error registering user" });
+      return res.status(500).json({ error: "Error registering user" });
     }
   },
 
@@ -86,13 +86,13 @@ export default {
         role: user.role,
       });
 
-      res.status(200).json({
+      return res.status(200).json({
         accessToken,
         refreshToken,
       });
     } catch (err) {
       logger.error("Error logging in", { err });
-      res.status(500).json({ error: "Error logging in" });
+      return res.status(500).json({ error: "Error logging in" });
     }
   },
 
@@ -122,10 +122,10 @@ export default {
 
       const accessToken = generateAccessToken(decoded.userId, decoded.userRole);
       logger.info("Token refreshed successfully", { accessToken });
-      res.status(200).json({ newAccessToken: accessToken });
+      return res.status(200).json({ newAccessToken: accessToken });
     } catch (err) {
       logger.error("Error refreshing token", { err });
-      res.status(403).json({
+      return res.status(403).json({
         error: "Refresh token is invalid or has been expired",
       });
     }
@@ -142,10 +142,10 @@ export default {
     try {
       await RefreshToken.destroy({ where: { token: refreshToken } });
       logger.info("User logged out successfully");
-      res.status(200).json({ message: "Logged out successfully" });
+      return res.status(200).json({ message: "Logged out successfully" });
     } catch (err) {
       logger.error("Error logging out", { err });
-      res.status(500).json({ error: "Error logging out" });
+      return res.status(500).json({ error: "Error logging out" });
     }
   },
   isAdmin: async (req: Request, res: Response) => {
@@ -169,10 +169,10 @@ export default {
         });
       }
 
-      res.status(200).json({ isAdmin });
+      return res.status(200).json({ isAdmin });
     } catch (err) {
       logger.error("Error checking admin status", { err });
-      res.status(500).json({ error: "Error checking admin status" });
+      return res.status(500).json({ error: "Error checking admin status" });
     }
   },
 };

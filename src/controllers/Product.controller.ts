@@ -53,7 +53,7 @@ export default {
         currentPage: page,
       });
 
-      res.status(200).json({
+      return res.status(200).json({
         products,
         totalRecords: count,
         totalPages: Math.ceil(count / pageSize),
@@ -61,7 +61,7 @@ export default {
       });
     } catch (err) {
       logger.error("Error fetching data", { err });
-      res.status(500).json({ error: "Error fetching data" });
+      return res.status(500).json({ error: "Error fetching data" });
     }
   },
   getById: async (req: Request, res: Response) => {
@@ -76,10 +76,12 @@ export default {
       }
 
       logger.info("Product fetched successfully", { product });
-      res.status(200).json(product);
+      return res.status(200).json(product);
     } catch (err) {
       logger.error("Error fetching individual product", { err });
-      res.status(500).json({ error: "Error fetching individual product data" });
+      return res
+        .status(500)
+        .json({ error: "Error fetching individual product data" });
     }
   },
   getByProductIds: async (req: Request, res: Response) => {
@@ -107,7 +109,7 @@ export default {
       return res.status(200).json(products);
     } catch (err) {
       console.log("Error fetching data:", err);
-      res.status(500).json({ error: "Error fetching data" });
+      return res.status(500).json({ error: "Error fetching data" });
     }
   },
 
@@ -175,13 +177,13 @@ export default {
         productIds: addedProducts.map((p) => p.id),
       });
 
-      res.status(201).json({
+      return res.status(201).json({
         message: "Products added successfully",
         products: addedProducts,
       });
     } catch (err) {
       logger.error("Error adding products", { err });
-      res.status(500).json({ error: "Error adding products" });
+      return res.status(500).json({ error: "Error adding products" });
     }
   },
 
@@ -209,14 +211,16 @@ export default {
           categoryId,
         });
         logger.info("Product updated successfully", { product });
-        res.status(200).json({ message: "Product updated successfully" });
+        return res
+          .status(200)
+          .json({ message: "Product updated successfully" });
       } else {
         logger.warn("Product not found", { productId });
-        res.status(404).json({ error: "Product not found" });
+        return res.status(404).json({ error: "Product not found" });
       }
     } catch (err) {
       logger.error("Error updating product", { err });
-      res.status(500).json({ error: "Error updating product" });
+      return res.status(500).json({ error: "Error updating product" });
     }
   },
   delete: async (req: Request, res: Response) => {
@@ -227,24 +231,26 @@ export default {
       if (product) {
         await product.destroy();
         logger.info("Product deleted successfully", { product });
-        res.status(200).json({ message: "Product deleted successfully" });
+        return res
+          .status(200)
+          .json({ message: "Product deleted successfully" });
       } else {
         logger.warn("Product not found", { productId });
-        res.status(404).json({ error: "Product not found" });
+        return res.status(404).json({ error: "Product not found" });
       }
     } catch (err) {
       logger.error("Error deleting product", { err });
-      res.status(500).json({ error: "Error deleting product" });
+      return res.status(500).json({ error: "Error deleting product" });
     }
   },
   seed: async (_req: Request, res: Response) => {
     try {
       const _seed = await Product.bulkCreate(productSeedData);
       logger.info("Products seeded successfully");
-      res.status(201).json({ message: "Products seeded successfully" });
+      return res.status(201).json({ message: "Products seeded successfully" });
     } catch (err) {
       logger.error("Error seeding products", { err });
-      res.status(500).json({ error: "Error seeding products " + err });
+      return res.status(500).json({ error: "Error seeding products " + err });
     }
   },
 };
