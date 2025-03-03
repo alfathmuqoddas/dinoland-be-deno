@@ -1,4 +1,5 @@
-import express, { Request, Response } from "express";
+import express, { Request, Response, NextFunction } from "express";
+import process from "node:process";
 // import session from "express-session";
 import {
   UserRoutes,
@@ -106,6 +107,19 @@ app.use(
   MyBuildItemRoutes
 );
 
-db.sync({ force: false }).then(() => {
-  app.listen(8080, console.log("Server is running on port: " + 8080));
+// ✅ Error Handling Middleware (Catch Unhandled Errors)
+app.use((err: any, req: Request, res: Response, _next: NextFunction) => {
+  console.error("Unhandled Error:", err);
+  res.status(500).json({ error: "Internal server error" });
 });
+
+const PORT = Deno.env.get("PORT") || 8080;
+(async () => {
+  try {
+    await db.sync({ force: false });
+    app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+  } catch (error) {
+    console.error("❌ Failed to connect to the database:", error);
+    process.exit(1); // Exit if DB fails to connect
+  }
+})();
