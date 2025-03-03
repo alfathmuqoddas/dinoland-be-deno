@@ -16,6 +16,7 @@ import {
 import passport from "passport";
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 import User from "@/models/User.model.ts";
+import morganMiddleware from "@/middleware/morgan.ts";
 import db from "./db.js";
 
 const app = express();
@@ -23,6 +24,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
+app.use(morganMiddleware);
 
 Deno.env.set("JWT_SECRET", "your_jwt_secret_key");
 Deno.env.set("REFRESH_SECRET", "your_refresh_token_secret");
