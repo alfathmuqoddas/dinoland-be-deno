@@ -1,10 +1,11 @@
 import winston from "winston";
 import "winston-daily-rotate-file";
+const { combine, timestamp, json } = winston.format;
 
 // Define ELK-friendly log format
-const logFormat = winston.format.combine(
-  winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
-  winston.format.json() // Logs in JSON format for ELK
+const logFormat = combine(
+  timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
+  json() // Logs in JSON format for ELK
 );
 
 // Configure daily log rotation

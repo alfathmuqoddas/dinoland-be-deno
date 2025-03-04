@@ -42,7 +42,7 @@ export default {
         logger.warn("Build with not found", { id, userId });
         return res.status(404).json({ message: "Build not found" });
       } else {
-        logger.warn("Build fetched successfully", { build });
+        logger.info("Build fetched successfully", { build });
         return res.status(200).json(build);
       }
     } catch (error) {
