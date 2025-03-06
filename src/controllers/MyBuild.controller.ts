@@ -13,11 +13,6 @@ export default {
         },
       });
 
-      if (builds.length === 0) {
-        logger.warn("Builds not found", { userId });
-        return res.status(404).json({ error: "Builds not found" });
-      }
-
       logger.info("Builds fetched successfully", { builds });
       return res.status(200).json(builds);
     } catch (error) {
