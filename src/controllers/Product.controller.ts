@@ -43,7 +43,14 @@ export default {
       });
 
       if (!products) {
-        logger.warn("No products found", { categoryId, q });
+        logger.warn("No products found", {
+          categoryId,
+          q,
+          page,
+          pageSize,
+          sortBy,
+          sortOrder,
+        });
         return res.status(404).json({ error: "Products not found" });
       }
 
@@ -78,7 +85,7 @@ export default {
       logger.info("Product fetched successfully", { product });
       return res.status(200).json(product);
     } catch (err) {
-      logger.error("Error fetching individual product", { err });
+      logger.error("Error fetching individual product", { productId, err });
       return res
         .status(500)
         .json({ error: "Error fetching individual product data" });
@@ -108,7 +115,7 @@ export default {
       logger.info("Products fetched successfully", { products });
       return res.status(200).json(products);
     } catch (err) {
-      console.log("Error fetching data:", err);
+      console.log("Error fetching data:", { err });
       return res.status(500).json({ error: "Error fetching data" });
     }
   },
