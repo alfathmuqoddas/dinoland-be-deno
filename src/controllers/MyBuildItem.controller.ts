@@ -18,7 +18,11 @@ export default {
         },
       });
       if (!build) {
-        logger.warn("User does not have access to this build");
+        logger.warn({
+          message: "User does not have access to this build",
+          buildId,
+          userId: req.user.id,
+        });
         return res
           .status(403)
           .json({ error: "User does not have access to this build" });
@@ -70,7 +74,11 @@ export default {
         },
       });
       if (!build) {
-        logger.warn("User does not have access to this build");
+        logger.warn({
+          message: "User does not have access to this build",
+          buildId,
+          userId: req.user.id,
+        });
         return res
           .status(403)
           .json({ error: "User does not have access to this build" });
@@ -79,7 +87,7 @@ export default {
       // Validate that the product exists
       const product = await Product.findByPk(productId);
       if (!product) {
-        logger.warn("Product not found", buildId, productId);
+        logger.warn({ message: "Product not found", buildId, productId });
         return res.status(404).json({ error: "Product not found" });
       }
 
@@ -99,7 +107,11 @@ export default {
       if (existingBuildItem) {
         // Replace the existing product with the new one
         await existingBuildItem.update({ productId });
-        logger.info("Updated build item with new product");
+        logger.info({
+          message: "Updated build item with new product",
+          buildId,
+          productId,
+        });
         return res.status(200).json({
           message: "Build item updated successfully with new product.",
         });
@@ -107,7 +119,7 @@ export default {
 
       // Otherwise, create a new build item if no product in the same category exists.
       await MyBuildItem.create({ buildId, productId });
-      logger.info("Created new build item");
+      logger.info({ message: "Created new build item", buildId, productId });
       return res
         .status(201)
         .json({ message: "Build item added successfully." });
@@ -128,10 +140,19 @@ export default {
         },
       });
       if (!build) {
-        logger.warn("User does not have access to this build");
+        logger.warn({
+          message: "User does not have access to this build",
+          buildId,
+          productId,
+          userId: req.user.id,
+        });
         return res
           .status(403)
-          .json({ error: "User does not have access to this build" });
+          .json({
+            error: "User does not have access to this build",
+            buildId,
+            productId,
+          });
       }
       const item = await MyBuildItem.findOne({
         where: {
@@ -141,14 +162,14 @@ export default {
       });
       if (item) {
         await item.destroy();
-        logger.info("Deleted build item", item);
+        logger.info({ message: "Deleted build item", item });
         res.status(200).json({ message: "Build item deleted successfully" });
       } else {
-        logger.warn("Build item not found", buildId, productId);
+        logger.warn({ message: "Build item not found", buildId, productId });
         res.status(404).json({ error: "Build item not found" });
       }
     } catch (err) {
-      logger.error("Error deleting build item", err);
+      logger.error({ message: "Error deleting build item", err });
       res.status(500).json({ error: "Error deleting build item ", err });
     }
   },

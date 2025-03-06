@@ -108,7 +108,7 @@ app.use(
 );
 
 // ✅ Error Handling Middleware (Catch Unhandled Errors)
-app.use((err: any, req: Request, res: Response, _next: NextFunction) => {
+app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
   console.error("Unhandled Error:", err);
   res.status(500).json({ error: "Internal server error" });
 });
