@@ -12,7 +12,7 @@ export default {
         return res.status(404).json({ error: "Categories not found" });
       }
 
-      logger.info("Categories fetched successfully", { categories });
+      logger.info("Categories fetched successfully");
       return res.status(200).json(categories);
     } catch (err) {
       logger.error("Error fetching categories", { err });
@@ -106,7 +106,7 @@ export default {
     try {
       const _seed = await ProductCategory.bulkCreate(categorySeedData);
 
-      logger.info("Categories seeded successfully", { categories: _seed });
+      logger.info("Categories seeded successfully");
       res.status(201).json({ message: "Categories seeded successfully" });
     } catch (err) {
       logger.error("Error seeding categories", { err });
