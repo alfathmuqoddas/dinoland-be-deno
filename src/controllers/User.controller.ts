@@ -11,28 +11,24 @@ export default {
           email: "manny@gmail.com",
           password: await bcrypt.hash("password", 10),
           role: "admin",
-          isLoggedIn: false,
         },
         {
           name: "Juan",
           email: "juan@gmail.com",
           password: await bcrypt.hash("password", 10),
           role: "admin",
-          isLoggedIn: false,
         },
         {
           name: "Carlos",
           email: "carlos@gmail.com",
           password: await bcrypt.hash("password", 10),
           role: "customer",
-          isLoggedIn: false,
         },
         {
           name: "Dominique",
           email: "dominique@gmail.com",
           password: await bcrypt.hash("password", 10),
           role: "customer",
-          isLoggedIn: false,
         },
       ];
       await User.bulkCreate(users);

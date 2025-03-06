@@ -7,7 +7,7 @@ interface UserAttributes {
   name: string;
   email: string;
   password: string;
-  role: "admin" | "customer";
+  role: string;
   // isLoggedIn: boolean;
 }
 
@@ -23,7 +23,7 @@ class User
   declare name: string;
   declare email: string;
   declare password: string;
-  declare role: "admin" | "customer";
+  declare role: string;
   // declare isLoggedIn: boolean;
 }
 
