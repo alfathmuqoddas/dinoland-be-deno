@@ -5,6 +5,7 @@ import {
   ProductCategory,
   MyBuild,
 } from "@/models/index.ts";
+import logger from "@/config/logger.ts";
 
 export default {
   getMyBuildItems: async (req: Request, res: Response) => {
@@ -17,6 +18,7 @@ export default {
         },
       });
       if (!build) {
+        logger.warn("User does not have access to this build");
         return res
           .status(403)
           .json({ error: "User does not have access to this build" });
@@ -48,9 +50,10 @@ export default {
           },
         ],
       });
+      logger.info("Fetched build items for buildId: " + buildId);
       res.status(200).json(items);
     } catch (err) {
-      console.log("Error fetching data:", err);
+      logger.error("Error fetching build items", err);
       res.status(500).json({ error: "Error fetching data " + err });
     }
   },
@@ -67,6 +70,7 @@ export default {
         },
       });
       if (!build) {
+        logger.warn("User does not have access to this build");
         return res
           .status(403)
           .json({ error: "User does not have access to this build" });
@@ -75,6 +79,7 @@ export default {
       // Validate that the product exists
       const product = await Product.findByPk(productId);
       if (!product) {
+        logger.warn("Product not found", buildId, productId);
         return res.status(404).json({ error: "Product not found" });
       }
 
@@ -94,6 +99,7 @@ export default {
       if (existingBuildItem) {
         // Replace the existing product with the new one
         await existingBuildItem.update({ productId });
+        logger.info("Updated build item with new product");
         return res.status(200).json({
           message: "Build item updated successfully with new product.",
         });
@@ -101,12 +107,13 @@ export default {
 
       // Otherwise, create a new build item if no product in the same category exists.
       await MyBuildItem.create({ buildId, productId });
+      logger.info("Created new build item");
       return res
         .status(201)
         .json({ message: "Build item added successfully." });
-    } catch (error) {
-      console.error("Error adding build item:", error);
-      return res.status(500).json({ error: "Error adding build item." });
+    } catch (err) {
+      logger.error("Error adding build item", err);
+      return res.status(500).json({ error: "Error adding build item.", err });
     }
   },
 
@@ -121,6 +128,7 @@ export default {
         },
       });
       if (!build) {
+        logger.warn("User does not have access to this build");
         return res
           .status(403)
           .json({ error: "User does not have access to this build" });
@@ -133,13 +141,15 @@ export default {
       });
       if (item) {
         await item.destroy();
+        logger.info("Deleted build item", item);
         res.status(200).json({ message: "Build item deleted successfully" });
       } else {
+        logger.warn("Build item not found", buildId, productId);
         res.status(404).json({ error: "Build item not found" });
       }
     } catch (err) {
-      console.log("Error deleting build item:", err);
-      res.status(500).json({ error: "Error deleting build item " + err });
+      logger.error("Error deleting build item", err);
+      res.status(500).json({ error: "Error deleting build item ", err });
     }
   },
 };
