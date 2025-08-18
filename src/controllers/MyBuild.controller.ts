@@ -1,6 +1,10 @@
 import { Request, Response } from "express";
 import { MyBuild } from "@/models/index.ts";
 import logger from "@/config/logger.ts";
+import {
+  success,
+  error as errResponse,
+} from "../middleware/responseHandler.ts";
 
 export default {
   getMyBuilds: async (req: Request, res: Response) => {
@@ -14,12 +18,10 @@ export default {
       });
 
       logger.info("Builds fetched successfully", { builds });
-      return res.status(200).json(builds);
+      return success(res, "Builds fetched successfully", builds);
     } catch (error) {
       logger.error("Error fetching builds", { error });
-      return res
-        .status(500)
-        .json({ message: "Error retrieving builds", error });
+      return errResponse(res, "Error fetching builds");
     }
   },
   getMyBuildById: async (req: Request, res: Response) => {
@@ -35,14 +37,14 @@ export default {
       });
       if (!build) {
         logger.warn("Build with not found", { id, userId });
-        return res.status(404).json({ message: "Build not found" });
+        return errResponse(res, "Build not found", 404);
       } else {
         logger.info("Build fetched successfully", { build });
-        return res.status(200).json(build);
+        return success(res, "Build fetched successfully", build);
       }
     } catch (error) {
       logger.error("Error fetching build", { error });
-      return res.status(500).json({ message: "Error retrieving build", error });
+      return errResponse(res, `Error fetching build: ${error}`);
     }
   },
   createMyBuild: async (req: Request, res: Response) => {
@@ -52,9 +54,7 @@ export default {
     try {
       if (!name || !description) {
         logger.warn("Name and description are required");
-        return res
-          .status(400)
-          .json({ message: "Name and description are required" });
+        return errResponse(res, "Name and description are required", 400);
       }
       const _build = await MyBuild.create({
         userId,
@@ -62,10 +62,10 @@ export default {
         description,
       });
       logger.info("Build created successfully", { build: _build });
-      return res.status(201).json({ message: "Build created successfully" });
+      return success(res, "Build created successfully", _build);
     } catch (error) {
       logger.error("Error creating build", { error });
-      return res.status(500).json({ message: "Error creating build", error });
+      return errResponse(res, `Error creating build: ${error}`);
     }
   },
   updateMyBuild: async (req: Request, res: Response) => {
@@ -83,14 +83,14 @@ export default {
           description,
         });
         logger.info("Build updated successfully", { build });
-        return res.status(200).json({ message: "Build updated successfully" });
+        return success(res, "Build updated successfully", build);
       } else {
         logger.warn("Build not found", { buildId, userId });
-        return res.status(404).json({ message: "Build not found" });
+        return errResponse(res, "Build not found", 404);
       }
     } catch (error) {
       logger.error("Error updating build", { error });
-      return res.status(500).json({ message: "Error updating build ", error });
+      return errResponse(res, `Error updating build: ${error}`);
     }
   },
   deleteMyBuild: async (req: Request, res: Response) => {
@@ -102,14 +102,14 @@ export default {
       if (build) {
         await build.destroy();
         logger.info("Build deleted successfully", { build });
-        return res.status(200).json({ message: "Build successfully deleted" });
+        return success(res, "Build successfully deleted", null);
       } else {
         logger.warn("Build not found", { buildId, userId });
-        return res.status(404).json({ message: "Build not found" });
+        return errResponse(res, "Build not found", 404);
       }
     } catch (error) {
       logger.error("Error deleting build", { error });
-      return res.status(500).json({ message: "Error deleting build", error });
+      return errResponse(res, `Error deleting build: ${error}`);
     }
   },
 };

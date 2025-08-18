@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { Order, OrderItem, Product, Cart } from "@/models/index.ts";
 import sequelize from "../../db.js";
-import { where } from "sequelize";
 
 export default {
   getOrder: async (req: Request, res: Response) => {
