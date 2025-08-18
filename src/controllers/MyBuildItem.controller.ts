@@ -6,6 +6,10 @@ import {
   MyBuild,
 } from "@/models/index.ts";
 import logger from "@/config/logger.ts";
+import {
+  success,
+  error as errResponse,
+} from "../middleware/responseHandler.ts";
 
 export default {
   getMyBuildItems: async (req: Request, res: Response) => {
@@ -22,9 +26,7 @@ export default {
           buildId,
           userId: req.user.id,
         });
-        return res
-          .status(403)
-          .json({ error: "User does not have access to this build" });
+        return errResponse(res, "User does not have access to this build", 403);
       }
 
       const items = await MyBuildItem.findAll({
@@ -54,10 +56,10 @@ export default {
         ],
       });
       logger.info("Fetched build items", { buildId });
-      res.status(200).json(items);
+      return success(res, "Fetched build items", items);
     } catch (err) {
       logger.error("Error fetching build items", { err });
-      res.status(500).json({ error: "Error fetching data " + err });
+      return errResponse(res, `Error fetching build items: ${err}`, 500);
     }
   },
   add: async (req: Request, res: Response) => {
@@ -77,16 +79,18 @@ export default {
           buildId,
           userId: req.user.id,
         });
-        return res
-          .status(403)
-          .json({ error: "User does not have access to this build" });
+        return errResponse(res, "User does not have access to this build", 403);
       }
 
       // Validate that the product exists
       const product = await Product.findByPk(productId);
       if (!product) {
         logger.warn("Product not found", { buildId, productId });
-        return res.status(404).json({ error: "Product not found" });
+        return errResponse(
+          res,
+          `Product with buildId ${buildId} and productId ${productId} not found`,
+          404
+        );
       }
 
       // Check if there is an existing build item in the same build that has a product
@@ -109,23 +113,22 @@ export default {
           buildId,
           productId,
         });
-        return res.status(200).json({
-          message: "Build item updated successfully with new product.",
-        });
+        return success(
+          res,
+          "Build item updated successfully",
+          existingBuildItem
+        );
       }
 
       // Otherwise, create a new build item if no product in the same category exists.
       await MyBuildItem.create({ buildId, productId });
       logger.info("Created new build item", { buildId, productId });
-      return res
-        .status(201)
-        .json({ message: "Build item added successfully." });
+      return success(res, "Build item created successfully", null);
     } catch (err) {
       logger.error("Error adding build item", { err });
-      return res.status(500).json({ error: "Error adding build item.", err });
+      return errResponse(res, `Error adding build item: ${err}`, 500);
     }
   },
-
   delete: async (req: Request, res: Response) => {
     const { buildId } = req.params;
     const { productId } = req.body;
@@ -142,11 +145,7 @@ export default {
           productId,
           userId: req.user.id,
         });
-        return res.status(403).json({
-          error: "User does not have access to this build",
-          buildId,
-          productId,
-        });
+        return errResponse(res, "User does not have access to this build", 403);
       }
       const item = await MyBuildItem.findOne({
         where: {
@@ -157,14 +156,14 @@ export default {
       if (item) {
         await item.destroy();
         logger.info("Deleted build item", { buildId, productId });
-        res.status(200).json({ message: "Build item deleted successfully" });
+        return success(res, "Build item deleted successfully", null);
       } else {
         logger.warn("Build item not found", { buildId, productId });
-        res.status(404).json({ error: "Build item not found" });
+        return errResponse(res, "Build item not found", 404);
       }
     } catch (err) {
       logger.error("Error deleting build item", { err, buildId, productId });
-      res.status(500).json({ error: "Error deleting build item ", err });
+      return errResponse(res, `Error deleting build item: ${err}`, 500);
     }
   },
 };
