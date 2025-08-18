@@ -3,6 +3,10 @@ import { Product, ProductCategory } from "@/models/index.ts";
 import { Op } from "sequelize";
 import { productSeedData } from "@/helper/index.ts";
 import logger from "@/config/logger.ts";
+import {
+  success,
+  error as errResponse,
+} from "../middleware/responseHandler.ts";
 
 export default {
   getAll: async (req: Request, res: Response) => {
@@ -51,7 +55,7 @@ export default {
           sortBy,
           sortOrder,
         });
-        return res.status(404).json({ error: "Products not found" });
+        return errResponse(res, "Products not found", 404);
       }
 
       logger.info("Products fetched successfully", {
@@ -59,8 +63,7 @@ export default {
         totalPages: Math.ceil(count / pageSize),
         currentPage: page,
       });
-
-      return res.status(200).json({
+      return success(res, "Products fetched successfully", {
         products,
         totalRecords: count,
         totalPages: Math.ceil(count / pageSize),
@@ -68,7 +71,7 @@ export default {
       });
     } catch (err) {
       logger.error("Error fetching data", { err });
-      return res.status(500).json({ error: "Error fetching data" });
+      return errResponse(res, "Error fetching data");
     }
   },
   getById: async (req: Request, res: Response) => {
@@ -79,16 +82,14 @@ export default {
 
       if (!product) {
         logger.warn("Product not found", { productId });
-        return res.status(404).json({ error: "Product not found" });
+        return errResponse(res, "Product not found", 404);
       }
 
       logger.info("Product fetched successfully", { product });
-      return res.status(200).json(product);
+      return success(res, "Product fetched successfully", product);
     } catch (err) {
       logger.error("Error fetching individual product", { productId, err });
-      return res
-        .status(500)
-        .json({ error: "Error fetching individual product data" });
+      return errResponse(res, "Error fetching individual product data");
     }
   },
   getByProductIds: async (req: Request, res: Response) => {
@@ -99,9 +100,7 @@ export default {
     try {
       if (!Array.isArray(productIds) || productIds.length === 0) {
         logger.warn("Invalid input: productIds must be a non-empty array");
-        return res
-          .status(400)
-          .json({ error: "productIds must be a non-empty array" });
+        return errResponse(res, "productIds must be a non-empty array", 400);
       }
       const products = await Product.findAll({
         where: {
@@ -110,13 +109,13 @@ export default {
       });
       if (products.length === 0) {
         logger.warn("Products not found", { productIds });
-        return res.status(404).json({ error: "Products not found" });
+        return errResponse(res, "Products not found", 404);
       }
       logger.info("Products fetched successfully", { products });
-      return res.status(200).json(products);
+      return success(res, "Products fetched successfully", products);
     } catch (err) {
       console.log("Error fetching data:", { err });
-      return res.status(500).json({ error: "Error fetching data" });
+      return errResponse(res, "Error fetching data");
     }
   },
 
@@ -127,9 +126,11 @@ export default {
 
     if (!Array.isArray(products) || products.length === 0) {
       logger.warn("Invalid input: Provide an array of products");
-      return res
-        .status(400)
-        .json({ error: "Invalid input: Provide an array of products" });
+      return errResponse(
+        res,
+        "Invalid input: Provide an array of products",
+        400
+      );
     }
 
     // Validate products
@@ -152,7 +153,7 @@ export default {
 
     if (validationErrors.length > 0) {
       logger.warn("Product validation failed", { errors: validationErrors });
-      return res.status(400).json({ error: validationErrors });
+      return errResponse(res, validationErrors.toString(), 400);
     }
 
     try {
@@ -171,9 +172,11 @@ export default {
 
       if (invalidCategories.length > 0) {
         logger.warn("Category validation failed", { invalidCategories });
-        return res.status(404).json({
-          error: `Categories not found: ${invalidCategories.join(", ")}`,
-        });
+        return errResponse(
+          res,
+          `Categories not found: ${invalidCategories.join(", ")}`,
+          404
+        );
       }
 
       // Bulk create products
@@ -184,13 +187,10 @@ export default {
         productIds: addedProducts.map((p) => p.id),
       });
 
-      return res.status(201).json({
-        message: "Products added successfully",
-        products: addedProducts,
-      });
+      return success(res, "Products added successfully", { addedProducts });
     } catch (err) {
       logger.error("Error adding products", { err });
-      return res.status(500).json({ error: "Error adding products" });
+      return errResponse(res, "Error adding products");
     }
   },
 
@@ -218,16 +218,14 @@ export default {
           categoryId,
         });
         logger.info("Product updated successfully", { product });
-        return res
-          .status(200)
-          .json({ message: "Product updated successfully" });
+        return success(res, "Product updated successfully", product);
       } else {
         logger.warn("Product not found", { productId });
-        return res.status(404).json({ error: "Product not found" });
+        return errResponse(res, "Product not found", 404);
       }
     } catch (err) {
       logger.error("Error updating product", { err });
-      return res.status(500).json({ error: "Error updating product" });
+      return errResponse(res, "Error updating product");
     }
   },
   delete: async (req: Request, res: Response) => {
@@ -238,26 +236,24 @@ export default {
       if (product) {
         await product.destroy();
         logger.info("Product deleted successfully", { product });
-        return res
-          .status(200)
-          .json({ message: "Product deleted successfully" });
+        return success(res, "Product deleted successfully", null);
       } else {
         logger.warn("Product not found", { productId });
-        return res.status(404).json({ error: "Product not found" });
+        return errResponse(res, "Product not found", 404);
       }
     } catch (err) {
       logger.error("Error deleting product", { err });
-      return res.status(500).json({ error: "Error deleting product" });
+      return errResponse(res, "Error deleting product");
     }
   },
   seed: async (_req: Request, res: Response) => {
     try {
       const _seed = await Product.bulkCreate(productSeedData);
       logger.info("Products seeded successfully");
-      return res.status(201).json({ message: "Products seeded successfully" });
+      return success(res, "Products seeded successfully", _seed);
     } catch (err) {
       logger.error("Error seeding products", { err });
-      return res.status(500).json({ error: "Error seeding products " + err });
+      return errResponse(res, "Error seeding products");
     }
   },
 };
