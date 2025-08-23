@@ -5,32 +5,42 @@ import { Router } from "express";
 
 const router = Router();
 
-router.get("/", ProductController.getAll);
-router.get("/:productId", ProductController.getById);
-router.post("/bulkSearch", ProductController.getByProductIds);
+const {
+  getAll,
+  getById,
+  getByProductIds,
+  add: addProduct,
+  update: updateProduct,
+  delete: deleteProduct,
+  seed,
+} = ProductController;
+
+router.get("/", getAll);
+router.get("/:productId", getById);
+router.post("/bulkSearch", getByProductIds);
 router.post(
   "/add",
   passport.authenticate("jwt", { session: false }),
   ensureIsAdmin,
-  ProductController.add
+  addProduct
 );
 router.put(
   "/update/:productId",
   passport.authenticate("jwt", { session: false }),
   ensureIsAdmin,
-  ProductController.update
+  updateProduct
 );
 router.delete(
   "/delete/:productId",
   passport.authenticate("jwt", { session: false }),
   ensureIsAdmin,
-  ProductController.delete
+  deleteProduct
 );
 router.post(
   "/seed",
   passport.authenticate("jwt", { session: false }),
   ensureIsAdmin,
-  ProductController.seed
+  seed
 );
 
 export default router;

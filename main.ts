@@ -1,5 +1,5 @@
 import express, { Request, Response, NextFunction } from "express";
-import process from "node:process";
+// import process from "node:process";
 // import session from "express-session";
 import {
   UserRoutes,
@@ -120,6 +120,6 @@ const PORT = Deno.env.get("PORT") || 8080;
     app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
   } catch (error) {
     console.error("❌ Failed to connect to the database:", error);
-    process.exit(1); // Exit if DB fails to connect
+    // process.exit(1); // Exit if DB fails to connect
   }
 })();

@@ -3,8 +3,10 @@ import { Router } from "express";
 
 const router = Router();
 
-router.get("/", CartController.getCartItems);
-router.post("/", CartController.addToCart);
-router.post("/update/:productId", CartController.updateCartItem);
+const { getCartItems, addToCart, updateCartItem } = CartController;
+
+router.get("/count", getCartItems);
+router.post("/", addToCart);
+router.post("/update/:productId", updateCartItem);
 
 export default router;

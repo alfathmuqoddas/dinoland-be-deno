@@ -5,15 +5,17 @@ import passport from "passport";
 
 const router = Router();
 
-router.post("/login", AuthController.login);
-router.post("/register", AuthController.register);
-router.post("/logout", AuthController.logout);
-router.post("/refresh", AuthController.refresh);
+const { login, register, logout, refresh, isAdmin } = AuthController;
+
+router.post("/login", login);
+router.post("/register", register);
+router.post("/logout", logout);
+router.post("/refresh", refresh);
 router.get(
   "/isAdmin",
   passport.authenticate("jwt", { session: false }),
   ensureIsAdmin,
-  AuthController.isAdmin
+  isAdmin
 );
 
 export default router;

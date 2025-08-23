@@ -3,8 +3,10 @@ import express from "express";
 
 const router = express.Router();
 
-router.post("/seed", UserController.seedUser);
-router.get("/", UserController.getAllUser);
-router.get("/:id", UserController.getUserByUserId);
+const { seedUser, getAllUser, getUserByUserId } = UserController;
+
+router.post("/seed", seedUser);
+router.get("/", getAllUser);
+router.get("/:id", getUserByUserId);
 
 export default router;

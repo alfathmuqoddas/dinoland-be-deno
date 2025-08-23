@@ -4,9 +4,11 @@ import ensureIsAdmin from "../middleware/ensureIsAdmin.ts";
 
 const router = Router();
 
-router.get("/", OrderController.getOrder);
-router.get("/:id", OrderController.getOrderById);
-router.post("/", OrderController.addOrder);
-router.put("/:id", ensureIsAdmin, OrderController.updateOrder);
+const { getOrder, getOrderById, addOrder, updateOrder } = OrderController;
+
+router.get("/", getOrder);
+router.get("/:id", getOrderById);
+router.post("/", addOrder);
+router.put("/:id", ensureIsAdmin, updateOrder);
 
 export default router;

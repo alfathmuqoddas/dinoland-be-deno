@@ -5,31 +5,40 @@ import passport from "passport";
 
 const router = Router();
 
-router.get("/", ProductCategoryController.getAll);
-router.get("/:categoryId", ProductCategoryController.getById);
+const {
+  getAll,
+  getById,
+  add: addProductCategory,
+  update: updateProductCategory,
+  delete: deleteProductCategory,
+  seed,
+} = ProductCategoryController;
+
+router.get("/", getAll);
+router.get("/:categoryId", getById);
 router.post(
   "/add",
   passport.authenticate("jwt", { session: false }),
   ensureIsAdmin,
-  ProductCategoryController.add
+  addProductCategory
 );
 router.put(
   "/update/:categoryId",
   passport.authenticate("jwt", { session: false }),
   ensureIsAdmin,
-  ProductCategoryController.update
+  updateProductCategory
 );
 router.delete(
   "/delete/:categoryId",
   passport.authenticate("jwt", { session: false }),
   ensureIsAdmin,
-  ProductCategoryController.delete
+  deleteProductCategory
 );
 router.post(
   "/seed",
   passport.authenticate("jwt", { session: false }),
   ensureIsAdmin,
-  ProductCategoryController.seed
+  seed
 );
 
 export default router;

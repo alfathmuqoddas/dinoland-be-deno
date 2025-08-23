@@ -3,8 +3,14 @@ import MyBuildItemController from "@/controllers/MyBuildItem.controller.ts";
 
 const router = Router();
 
-router.get("/:buildId", MyBuildItemController.getMyBuildItems);
-router.post("/:buildId", MyBuildItemController.add);
-router.post("/delete/:buildId", MyBuildItemController.delete);
+const {
+  getMyBuildItems,
+  add,
+  delete: deleteMyBuildItem,
+} = MyBuildItemController;
+
+router.get("/:buildId", getMyBuildItems);
+router.post("/:buildId", add);
+router.post("/delete/:buildId", deleteMyBuildItem);
 
 export default router;

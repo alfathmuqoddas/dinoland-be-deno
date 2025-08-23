@@ -3,10 +3,18 @@ import { Router } from "express";
 
 const router = Router();
 
-router.get("/", ShippingAddressController.getShippingAddress);
-router.get("/:id", ShippingAddressController.getShippingAddressById);
-router.post("/", ShippingAddressController.addShippingAddress);
-router.put("/update/:id", ShippingAddressController.updateShippingAddress);
-router.delete("/delete/:id", ShippingAddressController.deleteShippingAddress);
+const {
+  getShippingAddress,
+  getShippingAddressById,
+  addShippingAddress,
+  updateShippingAddress,
+  deleteShippingAddress,
+} = ShippingAddressController;
+
+router.get("/", getShippingAddress);
+router.get("/:id", getShippingAddressById);
+router.post("/", addShippingAddress);
+router.put("/update/:id", updateShippingAddress);
+router.delete("/delete/:id", deleteShippingAddress);
 
 export default router;

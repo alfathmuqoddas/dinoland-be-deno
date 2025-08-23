@@ -3,10 +3,18 @@ import { Router } from "express";
 
 const router = Router();
 
-router.get("/", MyBuildController.getMyBuilds); // get all builds
-router.get("/:id", MyBuildController.getMyBuildById); // get a specific build
-router.post("/", MyBuildController.createMyBuild); // create a new build
-router.put("/:id", MyBuildController.updateMyBuild); // update a build
-router.delete("/:id", MyBuildController.deleteMyBuild); // delete a build
+const {
+  getMyBuilds,
+  getMyBuildById,
+  createMyBuild,
+  updateMyBuild,
+  deleteMyBuild,
+} = MyBuildController;
+
+router.get("/", getMyBuilds); // get all builds
+router.get("/:id", getMyBuildById); // get a specific build
+router.post("/", createMyBuild); // create a new build
+router.put("/:id", updateMyBuild); // update a build
+router.delete("/:id", deleteMyBuild); // delete a build
 
 export default router;

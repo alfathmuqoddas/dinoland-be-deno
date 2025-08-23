@@ -1,5 +1,10 @@
 import { Request, Response } from "express";
 import { User } from "@/models/index.ts";
+import logger from "@/config/logger.ts";
+import {
+  success,
+  error as errResponse,
+} from "../middleware/responseHandler.ts";
 import bcrypt from "bcryptjs";
 
 export default {
@@ -33,40 +38,48 @@ export default {
       ];
       await User.bulkCreate(users);
 
-      res.status(201).json({ message: "Seed data inserted successfully" });
+      logger.info("Users seeded successfully");
+      return success(res, "Users seeded successfully", null);
     } catch (error) {
-      console.error("Error seeding data:", error);
-      res.status(500).json({ error: "Failed to seed data" });
+      logger.error("Error seeding data", { error });
+      return errResponse(res, "Error seeding data");
     }
   },
 
   getAllUser: async (_req: Request, res: Response) => {
+    logger.info("Fetching all users");
     try {
       const users = await User.findAll();
 
       if (users.length === 0) {
-        return res.status(404).json({ error: "Users not found" });
+        logger.warn("Users not found");
+        return errResponse(res, "Users not found", 404);
       }
 
-      res.status(200).json(users); // Changed status to 200 for successful retrieval
+      logger.info("Users fetched successfully");
+      return success(res, "Users fetched successfully", users);
     } catch (err) {
       console.log("Error fetching data:", err);
-      res.status(500).json({ error: "Error fetching data" });
+      return errResponse(res, "Error fetching data");
     }
   },
 
   getUserByUserId: async (req: Request, res: Response) => {
     const { id } = req.params;
+    logger.info("Fetching user by ID", { id });
     try {
       const user = await User.findOne({ where: { email: id } });
 
       if (!user) {
-        return res.status(404).json({ error: "User not found" });
+        logger.warn("User not found", { id });
+        return errResponse(res, "User not found", 404);
       }
-      res.status(200).json(user); // Changed status to 200 for successful retrieval
+
+      logger.info("User fetched successfully", { user });
+      return success(res, "User fetched successfully", user);
     } catch (err) {
-      console.log("Error fetching individual user:", err);
-      res.status(500).json({ error: "Error fetching individual user data" });
+      logger.error("Error fetching individual user", { err });
+      return errResponse(res, "Error fetching individual user data");
     }
   },
 };
