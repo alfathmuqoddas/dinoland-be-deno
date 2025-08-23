@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { User, RefreshToken } from "@/models/index.ts";
 import bcrypt from "bcryptjs";
 import { generateAccessToken, generateRefreshToken } from "@/helper/index.ts";
-import { verify } from "jsonwebtoken";
+import { decryptRefreshToken } from "../helper/index.ts";
 import logger from "@/config/logger.ts";
 import {
   success,
@@ -105,7 +105,7 @@ export default {
     }
 
     try {
-      const decoded = verify(refreshToken, Deno.env.get("REFRESH_SECRET"));
+      const { decoded } = decryptRefreshToken(refreshToken);
       const storedToken = await RefreshToken.findOne({
         where: { token: refreshToken },
       });

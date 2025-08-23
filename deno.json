@@ -7,7 +7,7 @@
     "@std/assert": "jsr:@std/assert@1",
     "bcryptjs": "npm:bcryptjs@^2.4.3",
     "express": "npm:express@^4.21.2",
-    "jsonwebtoken": "npm:jsonwebtoken@^9.0.2",
+    "jose": "npm:jose@^6.0.13",
     "morgan": "npm:morgan@^1.10.0",
     "passport": "npm:passport@^0.7.0",
     "passport-jwt": "npm:passport-jwt@^4.0.1",
