@@ -46,36 +46,36 @@ export default {
   },
 
   login: async (req: Request, res: Response) => {
+    // 1. Destructure email and password from the request body first
+    const { email, password } = req.body;
+
+    // 2. Initial check for missing fields for an immediate 400 response
+    if (!email || !password) {
+      logger.warn("Login attempt failed: Email or password not provided");
+      return errResponse(res, "Email or password not provided", 400); // 400 Bad Request
+    }
+
+    logger.info("Login attempt for email", { email });
+
     try {
-      const { email, password } = req.body;
-
-      logger.info("Logging in", { email });
-
+      // 3. Find the user
       const user = await User.findOne({
         where: { email },
       });
 
-      if (!email || !password) {
-        logger.warn("Login attempt failed: Email or password not provided");
-        return errResponse(res, "Email or password not provided", 400);
-      }
+      const invalidCredentialsMessage = "Invalid credentials";
 
       if (!user) {
         logger.warn("Login failed: User not found", { email });
-        return errResponse(res, "User not found", 401);
+        return errResponse(res, invalidCredentialsMessage, 401); // 401 Unauthorized
       }
 
-      if (!(await bcrypt.compare(password, user.password))) {
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+
+      if (!isPasswordValid) {
         logger.warn("Login failed: Incorrect password", { email });
-        return errResponse(res, "Incorrect password", 401);
+        return errResponse(res, invalidCredentialsMessage, 401); // 401 Unauthorized
       }
-
-      // if (user.isLoggedIn) {
-      //   return res.status(401).json({ error: "User is already logged in" });
-      // }
-
-      // Update isLoggedIn to true
-      // await User.update({ isLoggedIn: true }, { where: { id: user.id } });
 
       const accessToken = await generateAccessToken(user.id, user.role);
       const refreshToken = await generateRefreshToken(user.id, user.role);
@@ -86,13 +86,15 @@ export default {
         role: user.role,
       });
 
+      // 6. Return success response
       return success(res, "User logged in successfully", {
         accessToken,
         refreshToken,
       });
     } catch (err) {
-      logger.error("Error logging in", { err });
-      return errResponse(res, "Error logging in");
+      // 7. Handle database or token generation errors
+      logger.error("Error during login process", { err });
+      return errResponse(res, "An error occurred during login", 500); // 500 Internal Server Error
     }
   },
 
