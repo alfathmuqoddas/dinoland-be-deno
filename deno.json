@@ -1,7 +1,9 @@
 {
   "tasks": {
     "dev": "deno run -A --watch main.ts",
-    "start": "deno run -A main.ts"
+    "start": "deno run -A main.ts",
+    "migrate": "deno run -A npm:sequelize-cli db:migrate",
+    "migrate:make": "deno run -A npm:sequelize-cli migration:generate"
   },
   "imports": {
     "@std/assert": "jsr:@std/assert@1",

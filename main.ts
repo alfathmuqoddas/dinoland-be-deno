@@ -56,8 +56,8 @@ passport.use(
         console.log(err);
         return done(err, false);
       }
-    }
-  )
+    },
+  ),
 );
 
 app.use(passport.initialize());
@@ -71,13 +71,13 @@ app.use("/api/auth", AuthRoutes);
 app.use(
   "/api/dashboard",
   passport.authenticate("jwt", { session: false }),
-  DashboardRoutes
+  DashboardRoutes,
 );
 app.use(
   "/api/cart",
   passport.authenticate("jwt", { session: false }),
   // ensureIsCustomer,
-  CartRoutes
+  CartRoutes,
 );
 
 app.use("/api/product", ProductRoutes);
@@ -86,25 +86,25 @@ app.use("/api/productCategory", ProductCategoryRoutes);
 app.use(
   "/api/shippingAddress",
   passport.authenticate("jwt", { session: false }),
-  ShippingAddressRoutes
+  ShippingAddressRoutes,
 );
 
 app.use(
   "/api/order",
   passport.authenticate("jwt", { session: false }),
-  OrderRoutes
+  OrderRoutes,
 );
 
 app.use(
   "/api/my-build",
   passport.authenticate("jwt", { session: false }),
-  MyBuildRoutes
+  MyBuildRoutes,
 );
 
 app.use(
   "/api/my-build-item",
   passport.authenticate("jwt", { session: false }),
-  MyBuildItemRoutes
+  MyBuildItemRoutes,
 );
 
 // ✅ Error Handling Middleware (Catch Unhandled Errors)
@@ -120,6 +120,5 @@ const PORT = Deno.env.get("PORT") || 8080;
     app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
   } catch (error) {
     console.error("❌ Failed to connect to the database:", error);
-    // process.exit(1); // Exit if DB fails to connect
   }
 })();
