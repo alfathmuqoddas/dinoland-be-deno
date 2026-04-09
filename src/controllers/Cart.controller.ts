@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { Cart, Product } from "@/models/index.ts";
 import logger from "@/config/logger.ts";
+import { success, error } from "@/middleware/responseHandler.ts";
 
 export default {
   getCartItems: async (req: Request, res: Response) => {
@@ -22,23 +23,27 @@ export default {
       }
 
       const { totalPrice, totalQuantity } = cartItem.reduce(
-        (acc, item: any) => {
+        (acc: any, item: any) => {
           return {
             totalPrice: acc.totalPrice + item.items.price * item.quantity,
             totalQuantity: acc.totalQuantity + item.quantity,
           };
         },
-        { totalPrice: 0, totalQuantity: 0 }
+        { totalPrice: 0, totalQuantity: 0 },
       );
 
       logger.info("Cart fetched successfully", {
         totalPrice,
         totalQuantity,
       });
-      return res.status(200).json({ totalPrice, totalQuantity, cartItem });
-    } catch (error) {
-      logger.error("Error fetching cart", { error });
-      return res.status(500).json({ message: "Error fetching cart ", error });
+      return success(res, "Cart fetched successfully", {
+        totalPrice,
+        totalQuantity,
+        cartItem,
+      });
+    } catch (err) {
+      logger.error("Error fetching cart", { err });
+      return error(res, "Error fetching cart", 500);
     }
   },
   addToCart: async (req: Request, res: Response) => {
@@ -59,8 +64,7 @@ export default {
           quantity,
           cartItem,
         });
-        return res.status(200).json({
-          message: "Product already in cart, quantity updated",
+        return success(res, "Product already in cart, quantity updated", {
           cartItem,
         });
       }
@@ -70,17 +74,15 @@ export default {
         quantity,
         cartItem,
       });
-      return res
-        .status(201)
-        .json({ message: "Product added to cart successfully", cartItem });
-    } catch (error) {
-      logger.error("Error adding to cart", { error });
-      return res.status(500).json({ message: "Error adding to cart", error });
+      return success(res, "Product added to cart successfully", { cartItem });
+    } catch (err) {
+      logger.error("Error adding to cart", { err });
+      return error(res, "Error adding to cart", 500);
     }
   },
   updateCartItem: async (req: Request, res: Response) => {
     const { productId } = req.params;
-    const { quantity, action } = req.body; // `action` can be 'set', 'increment', 'decrement', or 'delete'
+    const { quantity, action } = req.body;
     const { id: userId } = req.user;
 
     logger.info(`Updating cart item`, { productId, action, quantity, userId });
@@ -90,7 +92,7 @@ export default {
 
       if (!cartItem && action !== "set") {
         logger.warn("Cart item not found", { productId, userId });
-        return res.status(404).json({ message: "Cart item not found" });
+        return error(res, "Cart item not found", 404);
       }
 
       switch (action) {
@@ -104,9 +106,7 @@ export default {
             productId,
             quantity,
           });
-          return res
-            .status(200)
-            .json({ message: "Cart quantity set successfully" });
+          return success(res, "Cart quantity set successfully", null);
 
         case "increment":
           await cartItem?.increment("quantity", { by: 1 });

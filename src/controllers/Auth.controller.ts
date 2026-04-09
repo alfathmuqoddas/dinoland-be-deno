@@ -86,13 +86,16 @@ export default {
         role: user.role,
       });
 
-      // 6. Return success response
-      return success(res, "User logged in successfully", {
-        accessToken,
-        refreshToken,
-      });
+      return success(
+        res,
+        "User logged in successfully",
+        {
+          accessToken,
+          refreshToken,
+        },
+        200,
+      );
     } catch (err) {
-      // 7. Handle database or token generation errors
       logger.error("Error during login process", { err });
       return errResponse(res, "An error occurred during login", 500); // 500 Internal Server Error
     }
@@ -120,7 +123,7 @@ export default {
         return errResponse(
           res,
           "Refresh token is invalid or has been expired",
-          403
+          403,
         );
       }
 

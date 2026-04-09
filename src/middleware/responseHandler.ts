@@ -6,7 +6,7 @@ export const success = (
   res: Response,
   message: string,
   data: any,
-  statusCode = 200
+  statusCode: number = 200,
 ) => {
   return res.status(statusCode).json({
     status: "success",

@@ -5,7 +5,7 @@ const router = Router();
 
 const { getCartItems, addToCart, updateCartItem } = CartController;
 
-router.get("/count", getCartItems);
+router.get("/", getCartItems);
 router.post("/", addToCart);
 router.post("/update/:productId", updateCartItem);
 
