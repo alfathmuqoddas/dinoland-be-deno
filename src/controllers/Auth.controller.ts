@@ -46,13 +46,19 @@ export default {
   },
 
   login: async (req: Request, res: Response) => {
-    // 1. Destructure email and password from the request body first
-    const { email, password } = req.body;
+    let email: string | undefined;
+    let password: string | undefined;
 
-    // 2. Initial check for missing fields for an immediate 400 response
+    try {
+      ({ email, password } = req.body ?? {}); // safe destructuring
+    } catch {
+      logger.warn("Invalid request body");
+      return errResponse(res, "Invalid request body", 400);
+    }
+
     if (!email || !password) {
       logger.warn("Login attempt failed: Email or password not provided");
-      return errResponse(res, "Email or password not provided", 400); // 400 Bad Request
+      return errResponse(res, "Email or password not provided", 400);
     }
 
     logger.info("Login attempt for email", { email });
@@ -96,8 +102,8 @@ export default {
         200,
       );
     } catch (err) {
-      logger.error("Error during login process", { err });
-      return errResponse(res, "An error occurred during login", 500); // 500 Internal Server Error
+      logger.error("Error during login process", { err, email });
+      return errResponse(res, "An error occurred during login", 500);
     }
   },
 

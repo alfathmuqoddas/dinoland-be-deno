@@ -3,20 +3,21 @@ import { productSeedData } from "./productSeedData.ts";
 import { categorySeedData } from "./categorySeedData.ts";
 import { jwtVerify, SignJWT, JWTPayload } from "jose";
 
-const secret = new TextEncoder().encode(Deno.env.get("JWT_SECRET"));
-const refreshSecret = new TextEncoder().encode(Deno.env.get("REFRESH_SECRET"));
-
 const generateAccessToken = async (userId: number, userRole: string) => {
-  const accessToken = await new SignJWT({ userId, userRole } as JWTPayload)
+  const secret = new TextEncoder().encode(Deno.env.get("JWT_SECRET"));
+  if (!secret.length) throw new Error("JWT_SECRET is not set");
+  return new SignJWT({ userId, userRole } as JWTPayload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime("15m")
     .sign(secret);
-
-  return accessToken;
 };
 
 const generateRefreshToken = async (userId: number, userRole: string) => {
+  const refreshSecret = new TextEncoder().encode(
+    Deno.env.get("REFRESH_SECRET"),
+  );
+  if (!refreshSecret.length) throw new Error("REFRESH_SECRET is not set");
   const refreshToken = await new SignJWT({ userId, userRole } as JWTPayload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
